@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Local Time Clock</title>
   <style>
+    /* Base styles */
     body {
       margin: 0;
       padding: 0;
@@ -21,6 +22,7 @@
       align-items: center;
       overflow: hidden;
     }
+    /* Video container and wrapper for responsive embeds */
     .background-video {
       position: absolute;
       top: 0;
@@ -30,12 +32,6 @@
       z-index: -1;
       filter: blur(5px);
       transition: filter 0.3s ease;
-    }
-    .background-video > div {
-      position: absolute !important;
-      top: 50% !important;
-      left: 50% !important;
-      transform: translate(-50%, -50%) !important;
     }
     .container.unblur-background .background-video {
       filter: blur(0);
@@ -48,19 +44,22 @@
       height: auto;
       z-index: 1;
     }
-    .clock-video > div {
+    /* Video wrapper to enforce a square aspect ratio */
+    .video-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%;
+      height: 0;
+      padding-bottom: 100%;
     }
-    .clock-video iframe {
+    .video-wrapper iframe {
       position: absolute;
-      bottom: 0;
-      left: 0;
       width: 100%;
       height: 100%;
-      border: none;
+      left: 0;
+      top: 0;
+      border: 0;
     }
+    /* Clock styles */
     .clock {
       position: relative;
       width: 90vmin;
@@ -111,6 +110,7 @@
       border-radius: 5px;
       z-index: 4;
     }
+    /* Controls */
     .controls {
       position: absolute;
       bottom: 20px;
@@ -123,6 +123,7 @@
       border-radius: 5px;
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
     }
     button {
       background-color: transparent;
@@ -130,7 +131,8 @@
       border: 1px solid white;
       padding: 5px;
       border-radius: 3px;
-      margin: 0 5px;
+      margin: 5px;
+      cursor: pointer;
     }
     .fullscreen .controls {
       display: none;
@@ -151,126 +153,148 @@
       <button id="prevButton">Previous Video</button>
       <button id="nextButton">Next Video</button>
       <button id="toggleBackground">Toggle Clock Background</button>
-      <button id="toggleLoop">Lock/Unlock Video Loop</button>
+      <button id="toggleLoop">Lock Video Loop</button>
       <button id="fullScreenBtn">Full Screen</button>
       <button id="linkButton">Visit My Redbubble Store</button>
     </div>
   </div>
 
   <script>
-    const videos = [
-      // Example: Updated video URLs for improved embed
-      'https://www.youtube.com/embed/68mgtj?autoplay=1&mute=1&controls=0',
-      'https://www.youtube.com/embed/xicpa4?autoplay=1&mute=1&controls=0',
-      'https://www.youtube.com/embed/av0uc1?autoplay=1&mute=1&controls=0',
-      // Add more YouTube URLs or other video platforms here
+    // Array of Streamable video IDs
+    const videoIds = [
+      "68mgtj", "xicpa4", "av0uc1", "3r9wb4",
+      "f59xw6", "43hser", "z2eutk", "fhoaq1",
+      "8thoab", "xa7jab", "rf0v8f", "n96sor",
+      "zzqtq1", "66xu50", "qldvfo", "lyc4ma"
     ];
-
+    
+    // Helper to generate the embed code for a given video ID
+    function getEmbedCode(id) {
+      return `<div class="video-wrapper">
+                <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
+                        allow="autoplay; fullscreen" 
+                        allowfullscreen 
+                        playsinline>
+                </iframe>
+              </div>`;
+    }
+    
+    // Create an array of embed codes
+    const videos = videoIds.map(getEmbedCode);
+    
     let currentVideoIndex = 0;
     let isLoopLocked = false;
-
+    
     const backgroundVideoContainer = document.getElementById('background-video');
     const clockVideoContainer = document.getElementById('clock-video');
-
-    loadVideo(currentVideoIndex);
-
+    
+    // Function to load a video into both containers
     function loadVideo(index) {
-      const videoEmbedCode = `
-        <iframe src="${videos[index]}" frameborder="0" allow="autoplay; fullscreen" width="100%" height="100%"></iframe>
-      `;
+      const videoEmbedCode = videos[index];
       backgroundVideoContainer.innerHTML = videoEmbedCode;
       clockVideoContainer.innerHTML = videoEmbedCode;
     }
-
+    
+    loadVideo(currentVideoIndex);
+    
     function incrementVideoIndex() {
       currentVideoIndex = (currentVideoIndex + 1) % videos.length;
       loadVideo(currentVideoIndex);
     }
-
+    
     function decrementVideoIndex() {
       currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
       loadVideo(currentVideoIndex);
     }
-
+    
+    // Cycle videos every 60 seconds if loop is not locked
     setInterval(() => {
       if (!isLoopLocked) {
         incrementVideoIndex();
       }
     }, 60000);
-
+    
+    // Clock elements and update logic
     const hourHand = document.getElementById('hour-hand');
     const minuteHand = document.getElementById('minute-hand');
     const secondHand = document.getElementById('second-hand');
     const digitalClock = document.getElementById('digital-clock');
     const clock = document.querySelector('.clock');
-    const toggleBackgroundBtn = document.getElementById('toggleBackground');
     const container = document.querySelector('.container');
-    const toggleLoopBtn = document.getElementById('toggleLoop');
-    const fullScreenBtn = document.getElementById('fullScreenBtn');
-    const linkButton = document.getElementById('linkButton');
-
+    
     function updateClock() {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
-
+    
       const secondRotation = (seconds * 6 + 270) % 360;
-      const minuteRotation = (minutes * 6 + (seconds * 0.1)) + 270;
-      const hourRotation = ((hours % 12) * 30 + (minutes * 0.5) + 270) % 360;
-
+      const minuteRotation = (minutes * 6 + seconds * 0.1 + 270) % 360;
+      const hourRotation = (((hours % 12) * 30 + minutes * 0.5) + 270) % 360;
+    
       hourHand.style.transform = `rotate(${hourRotation}deg)`;
       minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
       secondHand.style.transform = `rotate(${secondRotation}deg)`;
-
+    
       digitalClock.textContent = now.toLocaleTimeString();
     }
-
+    
     setInterval(updateClock, 1000);
     updateClock();
-
+    
+    // Responsive clock size
     function adjustClockSize() {
       const minDimension = Math.min(window.innerWidth, window.innerHeight);
       clock.style.width = `${minDimension * 0.9}px`;
       clock.style.height = `${minDimension * 0.9}px`;
     }
-
+    
     window.addEventListener('resize', adjustClockSize);
     adjustClockSize();
-
+    
+    // Toggle clock background blur
+    const toggleBackgroundBtn = document.getElementById('toggleBackground');
     toggleBackgroundBtn.addEventListener('click', () => {
       clock.classList.toggle('no-background');
       container.classList.toggle('unblur-background');
     });
-
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') incrementVideoIndex();
-      if (event.key === 'ArrowLeft') decrementVideoIndex();
-      if (event.key === 'ArrowDown') {
-        clock.classList.toggle('no-background');
-        container.classList.toggle('unblur-background');
-      }
-    });
-
+    
+    // Button event listeners for video navigation
+    document.getElementById('prevButton').addEventListener('click', decrementVideoIndex);
+    document.getElementById('nextButton').addEventListener('click', incrementVideoIndex);
+    
+    // Toggle video loop lock
+    const toggleLoopBtn = document.getElementById('toggleLoop');
     toggleLoopBtn.addEventListener('click', () => {
       isLoopLocked = !isLoopLocked;
       toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
     });
-
-    fullScreenBtn.addEventListener('click', () => {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
+    
+    // Allow arrow keys for video navigation
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        decrementVideoIndex();
+      } else if (event.key === 'ArrowRight') {
+        incrementVideoIndex();
       }
     });
-
+    
+    // Fullscreen toggle
+    const fullScreenBtn = document.getElementById('fullScreenBtn');
+    fullScreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        document.body.classList.add('fullscreen');
+      } else {
+        document.exitFullscreen();
+        document.body.classList.remove('fullscreen');
+      }
+    });
+    
+    // External link button
+    const linkButton = document.getElementById('linkButton');
     linkButton.addEventListener('click', () => {
-      window.location.href = 'https://www.redbubble.com/';
+      window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
     });
   </script>
 </body>
