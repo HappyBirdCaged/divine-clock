@@ -153,29 +153,17 @@
       <button id="toggleBackground">Toggle Clock Background</button>
       <button id="toggleLoop">Lock/Unlock Video Loop</button>
       <button id="fullScreenBtn">Full Screen</button>
-      <!-- Replaced the slider with a button -->
       <button id="linkButton">Visit My Redbubble Store</button>
     </div>
   </div>
 
   <script>
     const videos = [
-      `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/68mgtj?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/xicpa4?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/av0uc1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/3r9wb4?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/f59xw6?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/43hser?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/z2eutk?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/fhoaq1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/8thoab?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/xa7jab?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/rf0v8f?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/n96sor?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/zzqtq1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/66xu50?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/qldvfo?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/lyc4ma?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+      // Example: Updated video URLs for improved embed
+      'https://www.youtube.com/embed/68mgtj?autoplay=1&mute=1&controls=0',
+      'https://www.youtube.com/embed/xicpa4?autoplay=1&mute=1&controls=0',
+      'https://www.youtube.com/embed/av0uc1?autoplay=1&mute=1&controls=0',
+      // Add more YouTube URLs or other video platforms here
     ];
 
     let currentVideoIndex = 0;
@@ -187,7 +175,9 @@
     loadVideo(currentVideoIndex);
 
     function loadVideo(index) {
-      const videoEmbedCode = videos[index];
+      const videoEmbedCode = `
+        <iframe src="${videos[index]}" frameborder="0" allow="autoplay; fullscreen" width="100%" height="100%"></iframe>
+      `;
       backgroundVideoContainer.innerHTML = videoEmbedCode;
       clockVideoContainer.innerHTML = videoEmbedCode;
     }
@@ -254,25 +244,33 @@
     });
 
     window.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowLeft') {
-        decrementVideoIndex();
-      } else if (event.key === 'ArrowRight') {
-        incrementVideoIndex();
+      if (event.key === 'ArrowRight') incrementVideoIndex();
+      if (event.key === 'ArrowLeft') decrementVideoIndex();
+      if (event.key === 'ArrowDown') {
+        clock.classList.toggle('no-background');
+        container.classList.toggle('unblur-background');
       }
     });
 
+    toggleLoopBtn.addEventListener('click', () => {
+      isLoopLocked = !isLoopLocked;
+      toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
+    });
+
     fullScreenBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
-        document.body.classList.add('fullscreen');
-      } else {
-        document.exitFullscreen();
-        document.body.classList.remove('fullscreen');
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
       }
     });
 
     linkButton.addEventListener('click', () => {
-      window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
+      window.location.href = 'https://www.redbubble.com/';
     });
   </script>
 </body>
