@@ -153,14 +153,14 @@
       <button id="toggleBackground">Toggle Clock Background</button>
       <button id="toggleLoop">Lock/Unlock Video Loop</button>
       <button id="fullScreenBtn">Full Screen</button>
+      <!-- Replaced the slider with a button -->
       <button id="linkButton">Visit My Redbubble Store</button>
     </div>
   </div>
 
   <script>
     const videos = [
-      // Example: Updated video URLs for improved embed
-   `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/68mgtj?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+      `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/68mgtj?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
 `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/xicpa4?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
 `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/av0uc1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
 `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/3r9wb4?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
@@ -176,7 +176,6 @@
 `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/66xu50?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
 `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/qldvfo?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
 `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/lyc4ma?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
-      // Add more YouTube URLs or other video platforms here
     ];
 
     let currentVideoIndex = 0;
@@ -188,9 +187,7 @@
     loadVideo(currentVideoIndex);
 
     function loadVideo(index) {
-      const videoEmbedCode = `
-        <iframe src="${videos[index]}" frameborder="0" allow="autoplay; fullscreen" width="100%" height="100%"></iframe>
-      `;
+      const videoEmbedCode = videos[index];
       backgroundVideoContainer.innerHTML = videoEmbedCode;
       clockVideoContainer.innerHTML = videoEmbedCode;
     }
@@ -257,33 +254,25 @@
     });
 
     window.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') incrementVideoIndex();
-      if (event.key === 'ArrowLeft') decrementVideoIndex();
-      if (event.key === 'ArrowDown') {
-        clock.classList.toggle('no-background');
-        container.classList.toggle('unblur-background');
+      if (event.key === 'ArrowLeft') {
+        decrementVideoIndex();
+      } else if (event.key === 'ArrowRight') {
+        incrementVideoIndex();
       }
     });
 
-    toggleLoopBtn.addEventListener('click', () => {
-      isLoopLocked = !isLoopLocked;
-      toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
-    });
-
     fullScreenBtn.addEventListener('click', () => {
-      if (document.documentElement.requestFullscreen) {
+      if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
+        document.body.classList.add('fullscreen');
+      } else {
+        document.exitFullscreen();
+        document.body.classList.remove('fullscreen');
       }
     });
 
     linkButton.addEventListener('click', () => {
-      window.location.href = 'https://www.redbubble.com/';
+      window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
     });
   </script>
 </body>
