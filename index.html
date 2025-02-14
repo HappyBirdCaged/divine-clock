@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Device Redirect</title>
+  <script>
+    // A simple device detection using the user agent string
+    window.onload = function () {
+      // List of mobile identifiers in the user agent
+      const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Redirect to mobile-optimized page
+        window.location.href = "Divine Clock-Mobile.html";
+      } else {
+        // Redirect to PC-optimized page
+        window.location.href = "Divine Clock-PC.html";
+      }
+    };
+  </script>
+</head>
+<body>
+  <p>Redirecting based on your device...</p>
+</body>
+</html>
