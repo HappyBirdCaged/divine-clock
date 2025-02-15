@@ -161,10 +161,10 @@
     /* Controls container */
     .controls {
       position: absolute;
-      bottom: 20px;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 4;
+      z-index: 5;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -177,8 +177,7 @@
       color: white;
       border: 1px solid white;
       padding: 5px;
-      border-radius: 3px;
-      margin: 5px;
+      border-radius: 50%; /* Make it circular */
       cursor: pointer;
       touch-action: manipulation;
       font-size: 1.5vmin;
@@ -187,12 +186,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: absolute; /* Position it absolutely within the clock */
+      bottom: -15px; /* Half outside the clock rim */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5; /* Ensure it's above the clock */
     }
 
     /* Menu styles */
     .menu {
       position: absolute;
-      bottom: 40px; /* Position below the menu button */
+      bottom: 30px; /* Position above the menu button */
       left: 50%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.2);
@@ -238,19 +242,19 @@
       <div class="hand hour-hand" id="hour-hand"></div>
       <div class="hand minute-hand" id="minute-hand"></div>
       <div class="hand second-hand" id="second-hand"></div>
-    </div>
-    <div class="digital-clock" id="digital-clock"></div>
-    <div class="controls">
-      <button id="menuButton" class="menu-button">▲</button>
-      <div id="menu" class="menu">
-        <button id="prevButton">Previous Video</button>
-        <button id="nextButton">Next Video</button>
-        <button id="toggleBackground">Toggle Clock Background</button>
-        <button id="toggleLoop">Lock Video Loop</button>
-        <button id="fullScreenBtn">Full Screen</button>
-        <button id="linkButton">Visit My Redbubble Store</button>
+      <div class="controls">
+        <button id="menuButton" class="menu-button">▲</button>
+        <div id="menu" class="menu">
+          <button id="prevButton">Previous Video</button>
+          <button id="nextButton">Next Video</button>
+          <button id="toggleBackground">Toggle Clock Background</button>
+          <button id="toggleLoop">Lock Video Loop</button>
+          <button id="fullScreenBtn">Full Screen</button>
+          <button id="linkButton">Visit My Redbubble Store</button>
+        </div>
       </div>
     </div>
+    <div class="digital-clock" id="digital-clock"></div>
   </div>
 
   <script>
