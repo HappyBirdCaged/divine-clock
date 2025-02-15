@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Local Time Clock</title>
   <style>
     /* Base styles */
@@ -12,7 +12,9 @@
       overflow: hidden;
       background-color: #000;
       font-family: Arial, sans-serif;
+      touch-action: none; /* Prevent pinch zoom on mobile */
     }
+
     .container {
       position: relative;
       width: 100vw;
@@ -22,35 +24,45 @@
       align-items: center;
       overflow: hidden;
     }
-    /* Video container and wrapper for responsive embeds */
+
+    /* Optimized video container */
     .background-video {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: auto;
+      min-height: 100vh;
+      transform: translate(-50%, -50%);
       z-index: -1;
       filter: blur(5px);
       transition: filter 0.3s ease;
+      object-fit: cover; /* Ensure video fills container */
     }
+
     .container.unblur-background .background-video {
       filter: blur(0);
     }
+
     .clock-video {
       position: absolute;
-      bottom: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
       width: 100%;
       height: auto;
+      transform: translate(-50%, -50%);
       z-index: 1;
     }
-    /* Video wrapper to enforce a square aspect ratio */
+
+    /* Optimized video wrapper */
     .video-wrapper {
       position: relative;
       width: 100%;
       height: 0;
       padding-bottom: 100%;
+      will-change: transform; /* Performance optimization */
     }
+
     .video-wrapper iframe {
       position: absolute;
       width: 100%;
@@ -58,8 +70,10 @@
       left: 0;
       top: 0;
       border: 0;
+      display: block; /* Remove inline-block spacing */
     }
-    /* Clock styles */
+
+    /* Optimized clock styles */
     .clock {
       position: relative;
       width: 90vmin;
@@ -68,10 +82,13 @@
       border-radius: 50%;
       overflow: hidden;
       z-index: 2;
+      will-change: transform, width, height;
     }
+
     .clock.no-background .clock-video {
       display: none;
     }
+
     .hand {
       position: absolute;
       width: 50%;
@@ -82,22 +99,28 @@
       transform-origin: 0% 50%;
       transition: transform 0.05s ease-in-out;
       z-index: 3;
+      will-change: transform;
     }
+
+    /* Rest of the styles remain unchanged */
     .hour-hand {
       height: 0.4vmin;
       width: 35%;
       background-color: rgba(255, 255, 255, 0.8);
     }
+
     .minute-hand {
       height: 0.3vmin;
       width: 45%;
       background-color: rgba(255, 255, 255, 0.6);
     }
+
     .second-hand {
       height: 0.15vmin;
       width: 50%;
       background-color: rgba(255, 0, 0, 0.8);
     }
+
     .digital-clock {
       position: absolute;
       top: 3vmin;
@@ -110,7 +133,7 @@
       border-radius: 5px;
       z-index: 4;
     }
-    /* Controls */
+
     .controls {
       position: absolute;
       bottom: 20px;
@@ -124,7 +147,9 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
+      touch-action: manipulation; /* Better touch response */
     }
+
     button {
       background-color: transparent;
       color: white;
@@ -133,7 +158,9 @@
       border-radius: 3px;
       margin: 5px;
       cursor: pointer;
+      touch-action: manipulation;
     }
+
     .fullscreen .controls {
       display: none;
     }
@@ -160,117 +187,109 @@
   </div>
 
   <script>
-    // Array of Streamable video IDs
+    // Optimized video loading with lazy loading
+    function getEmbedCode(id) {
+      return `<div class="video-wrapper">
+                <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
+                        allow="autoplay; fullscreen" 
+                        allowfullscreen 
+                        playsinline
+                        loading="lazy">
+                </iframe>
+              </div>`;
+    }
+
+    // Rest of the JavaScript remains largely unchanged
     const videoIds = [
       "68mgtj", "xicpa4", "av0uc1", "3r9wb4",
       "f59xw6", "43hser", "z2eutk", "fhoaq1",
       "8thoab", "xa7jab", "rf0v8f", "n96sor",
       "zzqtq1", "66xu50", "qldvfo", "lyc4ma"
     ];
-    
-    // Helper to generate the embed code for a given video ID
-    function getEmbedCode(id) {
-      return `<div class="video-wrapper">
-                <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
-                        allow="autoplay; fullscreen" 
-                        allowfullscreen 
-                        playsinline>
-                </iframe>
-              </div>`;
-    }
-    
-    // Create an array of embed codes
+
     const videos = videoIds.map(getEmbedCode);
-    
     let currentVideoIndex = 0;
     let isLoopLocked = false;
-    
+
     const backgroundVideoContainer = document.getElementById('background-video');
     const clockVideoContainer = document.getElementById('clock-video');
-    
-    // Function to load a video into both containers
+
     function loadVideo(index) {
       const videoEmbedCode = videos[index];
       backgroundVideoContainer.innerHTML = videoEmbedCode;
       clockVideoContainer.innerHTML = videoEmbedCode;
     }
-    
+
     loadVideo(currentVideoIndex);
-    
+
+    // Rest of the JavaScript remains unchanged
     function incrementVideoIndex() {
       currentVideoIndex = (currentVideoIndex + 1) % videos.length;
       loadVideo(currentVideoIndex);
     }
-    
+
     function decrementVideoIndex() {
       currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
       loadVideo(currentVideoIndex);
     }
-    
-    // Cycle videos every 60 seconds if loop is not locked
+
     setInterval(() => {
       if (!isLoopLocked) {
         incrementVideoIndex();
       }
     }, 60000);
-    
-    // Clock elements and update logic
+
     const hourHand = document.getElementById('hour-hand');
     const minuteHand = document.getElementById('minute-hand');
     const secondHand = document.getElementById('second-hand');
     const digitalClock = document.getElementById('digital-clock');
     const clock = document.querySelector('.clock');
     const container = document.querySelector('.container');
-    
+
     function updateClock() {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
-    
+
       const secondRotation = (seconds * 6 + 270) % 360;
       const minuteRotation = (minutes * 6 + seconds * 0.1 + 270) % 360;
       const hourRotation = (((hours % 12) * 30 + minutes * 0.5) + 270) % 360;
-    
+
       hourHand.style.transform = `rotate(${hourRotation}deg)`;
       minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
       secondHand.style.transform = `rotate(${secondRotation}deg)`;
-    
+
       digitalClock.textContent = now.toLocaleTimeString();
     }
-    
+
     setInterval(updateClock, 1000);
     updateClock();
-    
-    // Responsive clock size
+
     function adjustClockSize() {
       const minDimension = Math.min(window.innerWidth, window.innerHeight);
       clock.style.width = `${minDimension * 0.9}px`;
       clock.style.height = `${minDimension * 0.9}px`;
     }
-    
+
     window.addEventListener('resize', adjustClockSize);
     adjustClockSize();
-    
-    // Toggle clock background blur
+
     const toggleBackgroundBtn = document.getElementById('toggleBackground');
     toggleBackgroundBtn.addEventListener('click', () => {
       clock.classList.toggle('no-background');
       container.classList.toggle('unblur-background');
     });
-    
-    // Button event listeners for video navigation
+
     document.getElementById('prevButton').addEventListener('click', decrementVideoIndex);
     document.getElementById('nextButton').addEventListener('click', incrementVideoIndex);
-    
-    // Toggle video loop lock
+
     const toggleLoopBtn = document.getElementById('toggleLoop');
     toggleLoopBtn.addEventListener('click', () => {
       isLoopLocked = !isLoopLocked;
       toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
     });
-    
-    // Allow arrow keys for video navigation
+
     window.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft') {
         decrementVideoIndex();
@@ -278,8 +297,7 @@
         incrementVideoIndex();
       }
     });
-    
-    // Fullscreen toggle
+
     const fullScreenBtn = document.getElementById('fullScreenBtn');
     fullScreenBtn.addEventListener('click', () => {
       if (!document.fullscreenElement) {
@@ -290,8 +308,7 @@
         document.body.classList.remove('fullscreen');
       }
     });
-    
-    // External link button
+
     const linkButton = document.getElementById('linkButton');
     linkButton.addEventListener('click', () => {
       window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
