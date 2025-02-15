@@ -43,16 +43,16 @@
       filter: blur(0);
     }
 
-    /* Adjust the video wrapper to maintain a square aspect ratio and scale up */
+    /* Adjust the video wrapper to scale the video to touch the top and bottom edges */
     #background-video .video-wrapper {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 100vmax; /* Use the larger dimension (width or height) */
-      height: 100vmax; /* Force a square aspect ratio */
-      min-width: 100vmax; /* Ensure it scales up to fill the viewport */
-      min-height: 100vmax; /* Ensure it scales up to fill the viewport */
+      width: 100vh; /* Use viewport height to maintain square aspect ratio */
+      height: 100vh; /* Force the height to match the viewport height */
+      min-width: 100vw; /* Ensure it covers the width */
+      min-height: 100vh; /* Ensure it covers the height */
     }
 
     /* Ensure the iframe inside the video wrapper stretches to fill the wrapper */
