@@ -14,7 +14,7 @@
       font-family: Arial, sans-serif;
       touch-action: none;
     }
-    
+
     .container {
       position: relative;
       width: 100vw;
@@ -24,7 +24,7 @@
       align-items: center;
       overflow: hidden;
     }
-    
+
     /* Background video container */
     #background-video {
       position: absolute;
@@ -37,51 +37,31 @@
       filter: blur(5px);
       transition: filter 0.3s ease;
     }
-    
+
     /* When container has .unblur-background, remove blur */
     .container.unblur-background #background-video {
       filter: blur(0);
     }
-    
-    /* Modified styles for background video wrapper */
+
+    /* Adjust the video wrapper to stretch to the height of the viewport */
     #background-video .video-wrapper {
       position: absolute;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      height: 100vh;
-      width: auto;
-      min-width: 100vw;
-      aspect-ratio: 16/9;
+      height: 100vh; /* Force full viewport height */
+      width: auto;   /* Width adjusts to maintain aspect ratio */
+      min-width: 100vw; /* Ensure it's at least the viewport's width */
     }
-    
-    /* Ensure iframe fills the wrapper */
+
+    /* Ensure the iframe inside the video wrapper stretches to fill the wrapper */
     #background-video .video-wrapper iframe {
       width: 100%;
       height: 100%;
       border: 0;
       display: block;
-      object-fit: cover;
     }
-    
-    /* Media query for mobile devices (vertical orientation) */
-    @media screen and (max-width: 768px) and (orientation: portrait) {
-      #background-video .video-wrapper {
-        height: 100vh;
-        width: auto;
-        min-width: unset;
-        min-height: 100vh;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      
-      #background-video .video-wrapper iframe {
-        height: 100%;
-        width: auto;
-        min-width: 100vw;
-      }
-    }
-    
+
     /* Clock video (the one within the clock face) */
     .clock-video {
       position: absolute;
@@ -92,7 +72,7 @@
       transform: translate(-50%, -50%);
       z-index: 1;
     }
-    
+
     /* Generic video wrapper (for the clock video) */
     .video-wrapper {
       position: relative;
@@ -101,7 +81,7 @@
       padding-bottom: 100%;
       will-change: transform;
     }
-    
+
     .video-wrapper iframe {
       position: absolute;
       width: 100%;
@@ -111,7 +91,7 @@
       border: 0;
       display: block;
     }
-    
+
     /* Clock face styles */
     .clock {
       position: relative;
@@ -123,12 +103,12 @@
       z-index: 2;
       will-change: transform, width, height;
     }
-    
+
     /* When .no-background is set, hide the inner clock video */
     .clock.no-background .clock-video {
       display: none;
     }
-    
+
     .hand {
       position: absolute;
       width: 50%;
@@ -141,25 +121,25 @@
       z-index: 3;
       will-change: transform;
     }
-    
+
     .hour-hand {
       height: 0.4vmin;
       width: 35%;
       background-color: rgba(255, 255, 255, 0.8);
     }
-    
+
     .minute-hand {
       height: 0.3vmin;
       width: 45%;
       background-color: rgba(255, 255, 255, 0.6);
     }
-    
+
     .second-hand {
       height: 0.15vmin;
       width: 50%;
       background-color: rgba(255, 0, 0, 0.8);
     }
-    
+
     .digital-clock {
       position: absolute;
       top: 3vmin;
@@ -172,7 +152,7 @@
       border-radius: 5px;
       z-index: 4;
     }
-    
+
     .controls {
       position: absolute;
       bottom: 20px;
@@ -188,7 +168,7 @@
       flex-wrap: wrap;
       touch-action: manipulation;
     }
-    
+
     button {
       background-color: transparent;
       color: white;
@@ -199,7 +179,7 @@
       cursor: pointer;
       touch-action: manipulation;
     }
-    
+
     /* Hide controls in fullscreen */
     .fullscreen .controls {
       display: none;
@@ -225,7 +205,7 @@
       <button id="linkButton">Visit My Redbubble Store</button>
     </div>
   </div>
-  
+
   <script>
     // Return embed code for a given video ID.
     function getEmbedCode(id) {
@@ -238,100 +218,100 @@
                 </iframe>
               </div>`;
     }
-    
+
     const videoIds = [
       "68mgtj", "xicpa4", "av0uc1", "3r9wb4",
       "f59xw6", "43hser", "z2eutk", "fhoaq1",
       "8thoab", "xa7jab", "rf0v8f", "n96sor",
       "zzqtq1", "66xu50", "qldvfo", "lyc4ma"
     ];
-    
+
     const videos = videoIds.map(getEmbedCode);
     let currentVideoIndex = 0;
     let isLoopLocked = false;
-    
+
     const backgroundVideoContainer = document.getElementById('background-video');
     const clockVideoContainer = document.getElementById('clock-video');
     const container = document.querySelector('.container');
     const clock = document.querySelector('.clock');
-    
+
     function loadVideo(index) {
       const videoEmbedCode = videos[index];
       backgroundVideoContainer.innerHTML = videoEmbedCode;
       clockVideoContainer.innerHTML = videoEmbedCode;
     }
-    
+
     loadVideo(currentVideoIndex);
-    
+
     function incrementVideoIndex() {
       currentVideoIndex = (currentVideoIndex + 1) % videos.length;
       loadVideo(currentVideoIndex);
     }
-    
+
     function decrementVideoIndex() {
       currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
       loadVideo(currentVideoIndex);
     }
-    
+
     setInterval(() => {
       if (!isLoopLocked) {
         incrementVideoIndex();
       }
     }, 60000);
-    
+
     // Clock hands and digital clock update
     const hourHand = document.getElementById('hour-hand');
     const minuteHand = document.getElementById('minute-hand');
     const secondHand = document.getElementById('second-hand');
     const digitalClock = document.getElementById('digital-clock');
-    
+
     function updateClock() {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
-      
+
       const secondRotation = (seconds * 6 + 270) % 360;
       const minuteRotation = (minutes * 6 + seconds * 0.1 + 270) % 360;
       const hourRotation = (((hours % 12) * 30 + minutes * 0.5) + 270) % 360;
-      
+
       hourHand.style.transform = `rotate(${hourRotation}deg)`;
       minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
       secondHand.style.transform = `rotate(${secondRotation}deg)`;
-      
+
       digitalClock.textContent = now.toLocaleTimeString();
     }
-    
+
     setInterval(updateClock, 1000);
     updateClock();
-    
+
     // Adjust clock size based on viewport dimensions.
     function adjustClockSize() {
       const minDimension = Math.min(window.innerWidth, window.innerHeight);
       clock.style.width = `${minDimension * 0.9}px`;
       clock.style.height = `${minDimension * 0.9}px`;
     }
-    
+
     window.addEventListener('resize', adjustClockSize);
     adjustClockSize();
-    
+
     // Toggle the clock background (hiding the inner clock video) and unblurring the background.
     const toggleBackgroundBtn = document.getElementById('toggleBackground');
     toggleBackgroundBtn.addEventListener('click', () => {
       clock.classList.toggle('no-background');
       container.classList.toggle('unblur-background');
     });
-    
+
     // Video controls
     document.getElementById('prevButton').addEventListener('click', decrementVideoIndex);
     document.getElementById('nextButton').addEventListener('click', incrementVideoIndex);
-    
+
     const toggleLoopBtn = document.getElementById('toggleLoop');
     toggleLoopBtn.addEventListener('click', () => {
       isLoopLocked = !isLoopLocked;
       toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
     });
-    
+
     window.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft') {
         decrementVideoIndex();
@@ -339,7 +319,7 @@
         incrementVideoIndex();
       }
     });
-    
+
     // Fullscreen toggle and automatic removal of the fullscreen class when exiting.
     const fullScreenBtn = document.getElementById('fullScreenBtn');
     fullScreenBtn.addEventListener('click', () => {
@@ -348,16 +328,17 @@
         document.body.classList.add('fullscreen');
       } else {
         document.exitFullscreen();
+        // Removal of 'fullscreen' class will also occur via the fullscreenchange listener below.
       }
     });
-    
+
     // Listen for fullscreen changes (including when exiting fullscreen on mobile)
     document.addEventListener("fullscreenchange", () => {
       if (!document.fullscreenElement) {
         document.body.classList.remove('fullscreen');
       }
     });
-    
+
     // External link button
     const linkButton = document.getElementById('linkButton');
     linkButton.addEventListener('click', () => {
