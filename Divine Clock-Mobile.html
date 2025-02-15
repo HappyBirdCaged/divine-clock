@@ -38,30 +38,31 @@
       transition: filter 0.3s ease;
     }
     
+    /* When container has .unblur-background, remove blur */
+    .container.unblur-background #background-video {
+      filter: blur(0);
+    }
+    
     /* Center and stretch the background video so that its top and bottom edges touch the viewport */
     #background-video .video-wrapper {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      height: 100vh;       /* Force the container’s height to always equal the viewport’s height */
-      width: auto;         /* Let the width adjust to maintain aspect ratio */
-      min-width: 100vw;    /* Ensure it’s at least as wide as the viewport */
+      height: 100vh;       /* force full viewport height */
+      width: auto;         /* width adjusts to maintain aspect ratio */
+      min-width: 100vw;    /* ensure it's at least the viewport's width */
     }
     
+    /* Note: object-fit does not reliably work on iframes, so we simply let the wrapper control sizing */
     #background-video .video-wrapper iframe {
       width: 100%;
       height: 100%;
       border: 0;
       display: block;
-      object-fit: cover;   /* This ensures the video covers the entire container */
     }
     
-    .container.unblur-background #background-video {
-      filter: blur(0);
-    }
-    
-    /* Clock video styles */
+    /* Clock video (the one within the clock face) */
     .clock-video {
       position: absolute;
       top: 50%;
@@ -72,7 +73,7 @@
       z-index: 1;
     }
     
-    /* Generic video wrapper (used for clock video) */
+    /* Generic video wrapper (for the clock video) */
     .video-wrapper {
       position: relative;
       width: 100%;
@@ -91,7 +92,7 @@
       display: block;
     }
     
-    /* Clock styles */
+    /* Clock face styles */
     .clock {
       position: relative;
       width: 90vmin;
@@ -103,6 +104,7 @@
       will-change: transform, width, height;
     }
     
+    /* When .no-background is set, hide the inner clock video */
     .clock.no-background .clock-video {
       display: none;
     }
@@ -178,6 +180,7 @@
       touch-action: manipulation;
     }
     
+    /* Hide controls in fullscreen */
     .fullscreen .controls {
       display: none;
     }
@@ -204,6 +207,7 @@
   </div>
   
   <script>
+    // Return embed code for a given video ID.
     function getEmbedCode(id) {
       return `<div class="video-wrapper">
                 <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
@@ -228,6 +232,8 @@
     
     const backgroundVideoContainer = document.getElementById('background-video');
     const clockVideoContainer = document.getElementById('clock-video');
+    const container = document.querySelector('.container');
+    const clock = document.querySelector('.clock');
     
     function loadVideo(index) {
       const videoEmbedCode = videos[index];
@@ -253,12 +259,11 @@
       }
     }, 60000);
     
+    // Clock hands and digital clock update
     const hourHand = document.getElementById('hour-hand');
     const minuteHand = document.getElementById('minute-hand');
     const secondHand = document.getElementById('second-hand');
     const digitalClock = document.getElementById('digital-clock');
-    const clock = document.querySelector('.clock');
-    const container = document.querySelector('.container');
     
     function updateClock() {
       const now = new Date();
@@ -280,6 +285,7 @@
     setInterval(updateClock, 1000);
     updateClock();
     
+    // Adjust clock size based on viewport dimensions.
     function adjustClockSize() {
       const minDimension = Math.min(window.innerWidth, window.innerHeight);
       clock.style.width = `${minDimension * 0.9}px`;
@@ -289,12 +295,14 @@
     window.addEventListener('resize', adjustClockSize);
     adjustClockSize();
     
+    // Toggle the clock background (hiding the inner clock video) and unblurring the background.
     const toggleBackgroundBtn = document.getElementById('toggleBackground');
     toggleBackgroundBtn.addEventListener('click', () => {
       clock.classList.toggle('no-background');
       container.classList.toggle('unblur-background');
     });
     
+    // Video controls
     document.getElementById('prevButton').addEventListener('click', decrementVideoIndex);
     document.getElementById('nextButton').addEventListener('click', incrementVideoIndex);
     
@@ -312,6 +320,7 @@
       }
     });
     
+    // Fullscreen toggle and automatic removal of the fullscreen class when exiting.
     const fullScreenBtn = document.getElementById('fullScreenBtn');
     fullScreenBtn.addEventListener('click', () => {
       if (!document.fullscreenElement) {
@@ -319,10 +328,18 @@
         document.body.classList.add('fullscreen');
       } else {
         document.exitFullscreen();
+        // Removal of 'fullscreen' class will also occur via the fullscreenchange listener below.
+      }
+    });
+    
+    // Listen for fullscreen changes (including when exiting fullscreen on mobile)
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
         document.body.classList.remove('fullscreen');
       }
     });
     
+    // External link button
     const linkButton = document.getElementById('linkButton');
     linkButton.addEventListener('click', () => {
       window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
