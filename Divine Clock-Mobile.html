@@ -158,23 +158,21 @@
       z-index: 4;
     }
 
+    /* Controls container */
     .controls {
       position: absolute;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 4;
-      background-color: rgba(0, 0, 0, 0.2);
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      flex-wrap: wrap;
-      touch-action: manipulation;
+      gap: 5px;
     }
 
-    button {
+    /* Menu button styles */
+    .menu-button {
       background-color: transparent;
       color: white;
       border: 1px solid white;
@@ -183,6 +181,47 @@
       margin: 5px;
       cursor: pointer;
       touch-action: manipulation;
+      font-size: 1.5vmin;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Menu styles */
+    .menu {
+      position: absolute;
+      bottom: 40px; /* Position below the menu button */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.2);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      display: none; /* Initially hidden */
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      z-index: 5;
+    }
+
+    /* Show the menu when it has the .expanded class */
+    .menu.expanded {
+      display: flex;
+    }
+
+    /* Button styles inside the menu */
+    .menu button {
+      background-color: transparent;
+      color: white;
+      border: 1px solid white;
+      padding: 5px;
+      border-radius: 3px;
+      cursor: pointer;
+      touch-action: manipulation;
+      width: 100%;
+      text-align: center;
     }
 
     /* Hide controls in fullscreen */
@@ -202,12 +241,15 @@
     </div>
     <div class="digital-clock" id="digital-clock"></div>
     <div class="controls">
-      <button id="prevButton">Previous Video</button>
-      <button id="nextButton">Next Video</button>
-      <button id="toggleBackground">Toggle Clock Background</button>
-      <button id="toggleLoop">Lock Video Loop</button>
-      <button id="fullScreenBtn">Full Screen</button>
-      <button id="linkButton">Visit My Redbubble Store</button>
+      <button id="menuButton" class="menu-button">▲</button>
+      <div id="menu" class="menu">
+        <button id="prevButton">Previous Video</button>
+        <button id="nextButton">Next Video</button>
+        <button id="toggleBackground">Toggle Clock Background</button>
+        <button id="toggleLoop">Lock Video Loop</button>
+        <button id="fullScreenBtn">Full Screen</button>
+        <button id="linkButton">Visit My Redbubble Store</button>
+      </div>
     </div>
   </div>
 
@@ -348,6 +390,14 @@
     const linkButton = document.getElementById('linkButton');
     linkButton.addEventListener('click', () => {
       window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
+    });
+
+    // Toggle the menu when the menu button is clicked
+    const menuButton = document.getElementById('menuButton');
+    const menu = document.getElementById('menu');
+
+    menuButton.addEventListener('click', () => {
+      menu.classList.toggle('expanded');
     });
   </script>
 </body>
