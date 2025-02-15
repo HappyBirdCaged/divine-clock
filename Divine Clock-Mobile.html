@@ -12,7 +12,7 @@
       overflow: hidden;
       background-color: #000;
       font-family: Arial, sans-serif;
-      touch-action: none; /* Prevent pinch zoom on mobile */
+      touch-action: none;
     }
 
     .container {
@@ -28,16 +28,14 @@
     /* Optimized video container */
     .background-video {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 0;
+      left: 0;
       width: 100vw;
-      height: auto;
-      min-height: 100vh;
-      transform: translate(-50%, -50%);
+      height: 100vh;
       z-index: -1;
       filter: blur(5px);
       transition: filter 0.3s ease;
-      object-fit: cover; /* Ensure video fills container */
+      object-fit: cover;
     }
 
     .container.unblur-background .background-video {
@@ -60,7 +58,7 @@
       width: 100%;
       height: 0;
       padding-bottom: 100%;
-      will-change: transform; /* Performance optimization */
+      will-change: transform;
     }
 
     .video-wrapper iframe {
@@ -70,7 +68,7 @@
       left: 0;
       top: 0;
       border: 0;
-      display: block; /* Remove inline-block spacing */
+      display: block;
     }
 
     /* Optimized clock styles */
@@ -102,7 +100,6 @@
       will-change: transform;
     }
 
-    /* Rest of the styles remain unchanged */
     .hour-hand {
       height: 0.4vmin;
       width: 35%;
@@ -147,7 +144,7 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      touch-action: manipulation; /* Better touch response */
+      touch-action: manipulation;
     }
 
     button {
@@ -187,7 +184,6 @@
   </div>
 
   <script>
-    // Optimized video loading with lazy loading
     function getEmbedCode(id) {
       return `<div class="video-wrapper">
                 <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
@@ -199,7 +195,6 @@
               </div>`;
     }
 
-    // Rest of the JavaScript remains largely unchanged
     const videoIds = [
       "68mgtj", "xicpa4", "av0uc1", "3r9wb4",
       "f59xw6", "43hser", "z2eutk", "fhoaq1",
@@ -222,7 +217,6 @@
 
     loadVideo(currentVideoIndex);
 
-    // Rest of the JavaScript remains unchanged
     function incrementVideoIndex() {
       currentVideoIndex = (currentVideoIndex + 1) % videos.length;
       loadVideo(currentVideoIndex);
