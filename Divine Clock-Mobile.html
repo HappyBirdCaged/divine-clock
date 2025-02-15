@@ -38,15 +38,15 @@
       transition: filter 0.3s ease;
     }
     
-    /* Center and stretch the background video */
+    /* Center and stretch the background video so that its top and bottom edges touch the viewport */
     #background-video .video-wrapper {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      height: 100vh;       /* Force the video height to fill the viewport */
-      min-width: 100vw;    /* Ensure the width is at least the viewport width */
-      width: auto;         /* Allow the width to adjust for aspect ratio */
+      height: 100vh;       /* Force the container’s height to always equal the viewport’s height */
+      width: auto;         /* Let the width adjust to maintain aspect ratio */
+      min-width: 100vw;    /* Ensure it’s at least as wide as the viewport */
     }
     
     #background-video .video-wrapper iframe {
@@ -54,7 +54,7 @@
       height: 100%;
       border: 0;
       display: block;
-      object-fit: cover;   /* Cover the container, cropping overflow */
+      object-fit: cover;   /* This ensures the video covers the entire container */
     }
     
     .container.unblur-background #background-video {
@@ -72,7 +72,7 @@
       z-index: 1;
     }
     
-    /* Optimized video wrapper for the clock video */
+    /* Generic video wrapper (used for clock video) */
     .video-wrapper {
       position: relative;
       width: 100%;
