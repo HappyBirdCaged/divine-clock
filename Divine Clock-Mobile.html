@@ -43,30 +43,15 @@
       filter: blur(0);
     }
     
-    /* Portrait orientation - scale by height, overflow sides */
-    @media screen and (orientation: portrait) {
-      #background-video .video-wrapper {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 100vh;       /* force full viewport height */
-        width: auto;         /* width adjusts to maintain aspect ratio */
-        min-width: unset;    /* remove min-width constraint */
-      }
-    }
-    
-    /* Landscape orientation - stretch to fit width, overflow top/bottom */
-    @media screen and (orientation: landscape) {
-      #background-video .video-wrapper {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100vw;        /* force full viewport width */
-        height: auto;        /* height adjusts to maintain aspect ratio */
-        min-height: 100vh;   /* ensure it's at least the viewport's height */
-      }
+    /* Center and stretch the background video so that its top and bottom edges touch the viewport */
+    #background-video .video-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100vh;       /* force full viewport height */
+      width: auto;         /* width adjusts to maintain aspect ratio */
+      min-width: 100vw;    /* ensure it's at least the viewport's width */
     }
     
     /* Note: object-fit does not reliably work on iframes, so we simply let the wrapper control sizing */
