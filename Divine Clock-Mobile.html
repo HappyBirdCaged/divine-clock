@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Local Time Clock</title>
   <style>
     /* Base styles */
@@ -176,20 +176,20 @@
       background-color: transparent;
       color: white;
       border: 1px solid white;
-      padding: 5px 10px; /* Adjust padding for width */
-      border-radius: 0;  /* Remove border-radius for a rectangular shape */
+      padding: 5px 10px;
+      border-radius: 0;
       cursor: pointer;
       touch-action: manipulation;
       font-size: 1.5vmin;
-      width: auto;  /* Let the content dictate width */
-      height: auto; /* Let the content dictate height */
-      display: inline-block; /* Change to inline-block for better alignment */
-      line-height: 1; /* Ensure text is centered vertically */
-      position: absolute; /* Position it absolutely within the clock */
-      bottom: -15px; /* Half outside the clock rim */
+      width: auto;
+      height: auto;
+      display: inline-block;
+      line-height: 1;
+      position: absolute;
+      bottom: 0; /* Adjusted to ensure visibility */
       left: 50%;
       transform: translateX(-50%);
-      z-index: 5; /* Ensure it's above the clock */
+      z-index: 100; /* Increased to ensure it's above other elements */
     }
 
     /* Menu styles */
@@ -230,6 +230,14 @@
     /* Hide controls in fullscreen */
     .fullscreen .controls {
       display: none;
+    }
+
+    /* Responsive adjustments for mobile */
+    @media (max-width: 600px) {
+      .menu-button {
+        font-size: 2vmin;
+        padding: 3px 8px;
+      }
     }
   </style>
 </head>
