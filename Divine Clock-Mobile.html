@@ -43,29 +43,29 @@
       filter: blur(0);
     }
     
-    /* Portrait orientation - scale by height, overflow sides */
+    /* Portrait orientation - create tall rectangle, centered */
     @media screen and (orientation: portrait) {
       #background-video .video-wrapper {
         position: absolute;
         top: 50%;
-        left: 100%;
+        left: 50%;
         transform: translate(-50%, -50%);
-        height: 100vh;       /* force full viewport height */
-        width: auto;         /* width adjusts to maintain aspect ratio */
-        min-width: unset;    /* remove min-width constraint */
+        height: 100vh;        /* full viewport height */
+        width: 30vw;          /* narrow width (30% of viewport width) */
+        min-width: unset;
       }
     }
     
-    /* Landscape orientation - stretch to fit width, overflow top/bottom */
+    /* Landscape orientation - create tall rectangle, centered */
     @media screen and (orientation: landscape) {
       #background-video .video-wrapper {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 100vw;        /* force full viewport width */
-        height: auto;        /* height adjusts to maintain aspect ratio */
-        min-height: 100vh;   /* ensure it's at least the viewport's height */
+        height: 100vh;        /* full viewport height */
+        width: 30vh;          /* narrow width (30% of viewport height) */
+        min-height: 100vh;
       }
     }
     
