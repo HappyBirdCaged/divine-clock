@@ -30,6 +30,7 @@
       z-index: -1;
       filter: blur(5px);
       transition: filter 0.3s ease;
+      /* Added for better video rendering */
       will-change: filter;
     }
     .background-video > div {
@@ -37,6 +38,7 @@
       top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%) !important;
+      /* Added for better scaling */
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -51,12 +53,12 @@
       width: 100%;
       height: auto;
       z-index: 1;
-      pointer-events: none; /* Disable interaction with clock video */
     }
     .clock-video > div {
       position: relative;
       width: 100%;
-      padding-bottom: 100%;
+      /* Adjusted for better aspect ratio handling */
+      padding-bottom: 100%; /* Changed to square aspect ratio for clock */
     }
     .clock-video iframe {
       position: absolute;
@@ -229,17 +231,9 @@
       loadVideo(currentVideoIndex);
     }
 
-    // Video controls - Fixed button functionality
-    prevButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      decrementVideoIndex();
-    });
-
-    nextButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      incrementVideoIndex();
-    });
-
+    // Video controls
+    prevButton.addEventListener('click', decrementVideoIndex);
+    nextButton.addEventListener('click', incrementVideoIndex);
     toggleLoopBtn.addEventListener('click', () => {
       isLoopLocked = !isLoopLocked;
       toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
@@ -303,12 +297,8 @@
       }
     });
 
-    // Add click-to-exit fullscreen functionality
-    document.addEventListener('click', (e) => {
-      if (document.fullscreenElement && 
-          !e.target.closest('.controls') && 
-          !e.target.closest('.clock') &&
-          e.target !== fullScreenBtn) {
+    document.addEventListener('click', () => {
+      if (document.fullscreenElement) {
         document.exitFullscreen();
         document.body.classList.remove('fullscreen');
       }
