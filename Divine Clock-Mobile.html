@@ -173,29 +173,29 @@
 
     /* Menu button styles */
     .menu-button {
-      background-color: transparent;
+      background-color: rgba(0, 0, 0, 0.5);
       color: white;
       border: 1px solid white;
-      padding: 5px;
-      border-radius: 3px;
-      margin: 5px;
+      padding: 10px;
+      border-radius: 50%;
       cursor: pointer;
       touch-action: manipulation;
-      font-size: 1.5vmin;
-      width: 30px;
-      height: 30px;
+      font-size: 16px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
     }
 
     /* Menu styles */
     .menu {
       position: absolute;
-      bottom: 40px; /* Position below the menu button */
+      bottom: 60px; /* Position below the menu button */
       left: 50%;
       transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.5);
       color: white;
       padding: 10px;
       border-radius: 5px;
@@ -241,7 +241,7 @@
     </div>
     <div class="digital-clock" id="digital-clock"></div>
     <div class="controls">
-      <button id="menuButton" class="menu-button">▲</button>
+      <button id="menuButton" class="menu-button">☰</button>
       <div id="menu" class="menu">
         <button id="prevButton">Previous Video</button>
         <button id="nextButton">Next Video</button>
@@ -375,7 +375,6 @@
         document.body.classList.add('fullscreen');
       } else {
         document.exitFullscreen();
-        // Removal of 'fullscreen' class will also occur via the fullscreenchange listener below.
       }
     });
 
