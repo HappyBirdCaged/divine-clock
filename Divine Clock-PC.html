@@ -31,6 +31,12 @@
       filter: blur(5px);
       transition: filter 0.3s ease;
     }
+    .background-video > div {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+    }
     .container.unblur-background .background-video {
       filter: blur(0);
     }
@@ -41,6 +47,19 @@
       width: 100%;
       height: auto;
       z-index: 1;
+    }
+    .clock-video > div {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+    }
+    .clock-video iframe {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
     }
     .clock {
       position: relative;
@@ -120,13 +139,9 @@
 </head>
 <body>
   <div class="container">
-    <div id="background-video" class="background-video">
-      <iframe id="background-iframe" allow="autoplay; fullscreen" allowfullscreen></iframe>
-    </div>
+    <div id="background-video" class="background-video"></div>
     <div class="clock">
-      <div id="clock-video" class="clock-video">
-        <iframe id="clock-iframe" allow="autoplay; fullscreen" allowfullscreen></iframe>
-      </div>
+      <div id="clock-video" class="clock-video"></div>
       <div class="hand hour-hand" id="hour-hand"></div>
       <div class="hand minute-hand" id="minute-hand"></div>
       <div class="hand second-hand" id="second-hand"></div>
@@ -144,51 +159,37 @@
 
   <script>
     const videos = [
-      '68mgtj', 'xicpa4', 'av0uc1', '3r9wb4', 'f59xw6',
-      '43hser', 'z2eutk', 'fhoaq1', '8thoab', 'xa7jab',
-      'rf0v8f', 'n96sor', 'zzqtq1', '66xu50', 'qldvfo', 'lyc4ma'
+      "https://streamable.com/e/68mgtj",
+      "https://streamable.com/e/xicpa4",
+      "https://streamable.com/e/av0uc1",
+      "https://streamable.com/e/3r9wb4",
+      "https://streamable.com/e/f59xw6",
+      "https://streamable.com/e/43hser",
+      "https://streamable.com/e/z2eutk",
+      "https://streamable.com/e/fhoaq1",
+      "https://streamable.com/e/8thoab",
+      "https://streamable.com/e/xa7jab",
+      "https://streamable.com/e/rf0v8f",
+      "https://streamable.com/e/n96sor",
+      "https://streamable.com/e/zzqtq1",
+      "https://streamable.com/e/66xu50",
+      "https://streamable.com/e/qldvfo",
+      "https://streamable.com/e/lyc4ma"
     ];
 
     let currentVideoIndex = 0;
     let isLoopLocked = false;
 
-    const backgroundIframe = document.getElementById('background-iframe');
-    const clockIframe = document.getElementById('clock-iframe');
+    const backgroundVideoContainer = document.getElementById('background-video');
+    const clockVideoContainer = document.getElementById('clock-video');
 
-    // Add iframe styles
-    const style = document.createElement('style');
-    style.textContent = `
-      .background-video iframe,
-      .clock-video iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .clock-video iframe {
-        bottom: 0;
-        transform: translate(-50%, 0);
-      }
-    `;
-    document.head.appendChild(style);
+    loadVideo(currentVideoIndex);
 
     function loadVideo(index) {
-      const videoId = videos[index];
-      const videoUrl = `https://streamable.com/e/${videoId}?autoplay=1&muted=1&nocontrols=1`;
-      
-      const loadIframe = (iframe) => {
-        iframe.src = videoUrl;
-        iframe.onerror = () => {
-          console.error('Failed to load video:', videoId);
-          incrementVideoIndex();
-        };
-      };
-
-      loadIframe(backgroundIframe);
-      loadIframe(clockIframe);
+      const videoUrl = videos[index];
+      const videoEmbedCode = `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="${videoUrl}?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`;
+      backgroundVideoContainer.innerHTML = videoEmbedCode;
+      clockVideoContainer.innerHTML = videoEmbedCode;
     }
 
     function incrementVideoIndex() {
@@ -201,18 +202,12 @@
       loadVideo(currentVideoIndex);
     }
 
-    // Set up video navigation
-    document.getElementById('prevButton').addEventListener('click', decrementVideoIndex);
-    document.getElementById('nextButton').addEventListener('click', incrementVideoIndex);
-
-    // Auto-advance videos
     setInterval(() => {
       if (!isLoopLocked) {
         incrementVideoIndex();
       }
     }, 60000);
 
-    // Clock functionality
     const hourHand = document.getElementById('hour-hand');
     const minuteHand = document.getElementById('minute-hand');
     const secondHand = document.getElementById('second-hand');
@@ -258,11 +253,6 @@
       container.classList.toggle('unblur-background');
     });
 
-    toggleLoopBtn.addEventListener('click', () => {
-      isLoopLocked = !isLoopLocked;
-      toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
-    });
-
     window.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft') {
         decrementVideoIndex();
@@ -284,9 +274,6 @@
     linkButton.addEventListener('click', () => {
       window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
     });
-
-    // Initial video load
-    loadVideo(currentVideoIndex);
   </script>
 </body>
 </html>
