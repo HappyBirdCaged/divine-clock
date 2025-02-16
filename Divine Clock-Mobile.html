@@ -1,399 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Local Time Clock</title>
-  <style>
-    /* Base styles */
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background-color: #000;
-      font-family: Arial, sans-serif;
-      touch-action: none;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Local Time Clock</title>
+    <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+            touch-action: none;
+        }
 
-    .container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-    /* Background video container */
-    #background-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      z-index: -1;
-      filter: blur(5px);
-      transition: filter 0.3s ease;
-    }
+        /* Background video container */
+        #background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+            filter: blur(5px);
+            transition: filter 0.3s ease;
+        }
 
-    /* When container has .unblur-background, remove blur */
-    .container.unblur-background #background-video {
-      filter: blur(0);
-    }
+        /* When container has .unblur-background, remove blur */
+        .container.unblur-background #background-video {
+            filter: blur(0);
+        }
 
-    /* Adjust the video wrapper to scale the video to touch the top and bottom edges */
-    #background-video .video-wrapper {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100vh; /* Use viewport height to maintain square aspect ratio */
-      height: 100vh; /* Force the height to match the viewport height */
-      min-width: 100vw; /* Ensure it covers the width */
-      min-height: 100vh; /* Ensure it covers the height */
-    }
+        /* Adjust the video wrapper to scale the video to touch the top and bottom edges */
+        #background-video .video-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vh; /* Use viewport height to maintain square aspect ratio */
+            height: 100vh; /* Force the height to match the viewport height */
+            min-width: 100vw; /* Ensure it covers the width */
+            min-height: 100vh; /* Ensure it covers the height */
+        }
 
-    /* Ensure the iframe inside the video wrapper stretches to fill the wrapper */
-    #background-video .video-wrapper iframe {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-    }
+        /* Ensure the iframe inside the video wrapper stretches to fill the wrapper */
+        #background-video .video-wrapper iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
 
-    /* Clock video (the one within the clock face) */
-    .clock-video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100%;
-      height: auto;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-    }
+        /* Clock video (the one within the clock face) */
+        .clock-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
 
-    /* Generic video wrapper (for the clock video) */
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-bottom: 100%;
-      will-change: transform;
-    }
+        /* Generic video wrapper (for the clock video) */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%;
+            will-change: transform;
+        }
 
-    .video-wrapper iframe {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      border: 0;
-      display: block;
-    }
+        .video-wrapper iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            border: 0;
+            display: block;
+        }
 
-    /* Clock face styles */
-    .clock {
-      position: relative;
-      width: 90vmin;
-      height: 90vmin;
-      border: 10px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      overflow: hidden;
-      z-index: 2;
-      will-change: transform, width, height;
-    }
+        /* Clock face styles */
+        .clock {
+            position: relative;
+            width: 90vmin;
+            height: 90vmin;
+            border: 10px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 2;
+            will-change: transform, width, height;
+        }
 
-    /* When .no-background is set, hide the inner clock video */
-    .clock.no-background .clock-video {
-      display: none;
-    }
+        /* When .no-background is set, hide the inner clock video */
+        .clock.no-background .clock-video {
+            display: none;
+        }
 
-    .hand {
-      position: absolute;
-      width: 50%;
-      height: 0.2vmin;
-      background-color: rgba(255, 255, 255, 0.4);
-      top: 50%;
-      left: 50%;
-      transform-origin: 0% 50%;
-      transition: transform 0.05s ease-in-out;
-      z-index: 3;
-      will-change: transform;
-    }
+        .hand {
+            position: absolute;
+            width: 50%;
+            height: 0.2vmin;
+            background-color: rgba(255, 255, 255, 0.4);
+            top: 50%;
+            left: 50%;
+            transform-origin: 0% 50%;
+            transition: transform 0.05s ease-in-out;
+            z-index: 3;
+            will-change: transform;
+        }
 
-    .hour-hand {
-      height: 0.4vmin;
-      width: 35%;
-      background-color: rgba(255, 255, 255, 0.8);
-    }
+        .hour-hand {
+            height: 0.4vmin;
+            width: 35%;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
 
-    .minute-hand {
-      height: 0.3vmin;
-      width: 45%;
-      background-color: rgba(255, 255, 255, 0.6);
-    }
+        .minute-hand {
+            height: 0.3vmin;
+            width: 45%;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
 
-    .second-hand {
-      height: 0.15vmin;
-      width: 50%;
-      background-color: rgba(255, 0, 0, 0.8);
-    }
+        .second-hand {
+            height: 0.15vmin;
+            width: 50%;
+            background-color: rgba(255, 0, 0, 0.8);
+        }
 
-    .digital-clock {
-      position: absolute;
-      top: 3vmin;
-      left: 50%;
-      transform: translateX(-50%);
-      color: white;
-      font-size: 2vmin;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 10px;
-      border-radius: 5px;
-      z-index: 4;
-    }
+        .digital-clock {
+            position: absolute;
+            top: 3vmin;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 2vmin;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 4;
+        }
 
-    /* Menu container fixed at the 6 o’clock position on the clock rim */
-     position: absolute;
-  left: 50%;
-  top: 100%;
-  transform: translate(-50%, -100%);
-  z-index: 6;
-    }
+        .controls {
+            position: absolute;
+            bottom: 50%; /* Center vertically */
+            left: 50%;
+            transform: translate(-50%, 50%); /* Center using translate */
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
 
-    /* Menu button styles */
-    .menu-button {
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      border: 1px solid white;
-      padding: 10px;
-      border-radius: 50%;
-      cursor: pointer;
-      touch-action: manipulation;
-      font-size: 16px;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    }
+        .menu-button {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 1px solid white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            touch-action: manipulation;
+            font-size: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            position: relative; /* Needed for absolute positioning of pseudo-element */
+        }
 
-    /* Menu styles */
-    .menu {
-      position: absolute;
-      bottom: 100%; /* Display above the button */
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-      display: none; /* Hidden by default */
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      z-index: 5;
-    }
+        .menu-button::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(90vmin + 20px); /* Match clock size + border */
+            height: calc(90vmin + 20px); /* Match clock size + border */
+            border-radius: 50%;
+            border: 10px solid rgba(255, 255, 255, 0.2); /* Match clock border */
+            z-index: -1; /* Place behind the button */
+            pointer-events: none; /* Allow clicks to pass through */
+        }
 
-    /* Show the menu when it has the .expanded class */
-    .menu.expanded {
-      display: flex;
-    }
+        .menu {
+            position: absolute;
+            bottom: calc(50% + 60px); /* Position below the adjusted menu button */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            z-index: 5;
+        }
 
-    /* Button styles inside the menu */
-    .menu button {
-      background-color: transparent;
-      color: white;
-      border: 1px solid white;
-      padding: 5px;
-      border-radius: 3px;
-      cursor: pointer;
-      touch-action: manipulation;
-      width: 100%;
-      text-align: center;
-    }
+        .menu.expanded {
+            display: flex;
+        }
 
-    /* (Optional) Hide the menu container in fullscreen mode */
-    .fullscreen .menu-container {
-      display: none;
-    }
-  </style>
+        .menu button {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            touch-action: manipulation;
+            width: 100%;
+            text-align: center;
+        }
+
+        .fullscreen .controls {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div id="background-video"></div>
-    <div class="clock">
-      <div id="clock-video" class="clock-video"></div>
-      <div class="hand hour-hand" id="hour-hand"></div>
-      <div class="hand minute-hand" id="minute-hand"></div>
-      <div class="hand second-hand" id="second-hand"></div>
-      <!-- Menu button fixed at 6 o’clock on the clock rim -->
-      <div class="menu-container">
-        <button id="menuButton" class="menu-button">☰</button>
-        <div id="menu" class="menu">
-          <button id="prevButton">Previous Video</button>
-          <button id="nextButton">Next Video</button>
-          <button id="toggleBackground">Toggle Clock Background</button>
-          <button id="toggleLoop">Lock Video Loop</button>
-          <button id="fullScreenBtn">Full Screen</button>
-          <button id="linkButton">Visit My Redbubble Store</button>
+    <div class="container">
+        <div id="background-video"></div>
+        <div class="clock">
+            <div id="clock-video" class="clock-video"></div>
+            <div class="hand hour-hand" id="hour-hand"></div>
+            <div class="hand minute-hand" id="minute-hand"></div>
+            <div class="hand second-hand" id="second-hand"></div>
         </div>
-      </div>
+        <div class="digital-clock" id="digital-clock"></div>
+        <div class="controls">
+            <button id="menuButton" class="menu-button">☰</button>
+            <div id="menu" class="menu">
+                <button id="prevButton">Previous Video</button>
+                <button id="nextButton">Next Video</button>
+                <button id="toggleBackground">Toggle Clock Background</button>
+                <button id="toggleLoop">Lock Video Loop</button>
+                <button id="fullScreenBtn">Full Screen</button>
+                <button id="linkButton">Visit My Redbubble Store</button>
+            </div>
+        </div>
     </div>
-    <div class="digital-clock" id="digital-clock"></div>
-  </div>
 
-  <script>
-    // Return embed code for a given video ID.
-    function getEmbedCode(id) {
-      return `<div class="video-wrapper">
-                <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
-                        allow="autoplay; fullscreen" 
-                        allowfullscreen 
-                        playsinline
-                        loading="lazy">
-                </iframe>
-              </div>`;
-    }
+    <script>
+        // Return embed code for a given video ID.
+        function getEmbedCode(id) {
+            return `<div class="video-wrapper">
+                        <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
+                                allow="autoplay; fullscreen" 
+                                allowfullscreen 
+                                playsinline
+                                loading="lazy">
+                        </iframe>
+                    </div>`;
+        }
 
-    const videoIds = [
-      "68mgtj", "xicpa4", "av0uc1", "3r9wb4",
-      "f59xw6", "43hser", "z2eutk", "fhoaq1",
-      "8thoab", "xa7jab", "rf0v8f", "n96sor",
-      "zzqtq1", "66xu50", "qldvfo", "lyc4ma"
-    ];
+        const videoIds = [
+            "68mgtj", "xicpa4", "av0uc1", "3r9wb4",
+            "f59xw6", "43hser", "z2eutk", "fhoaq1",
+            "8thoab", "xa7jab", "rf0v8f", "n96sor",
+            "zzqtq1", "66xu50", "qldvfo", "lyc4ma"
+        ];
 
-    const videos = videoIds.map(getEmbedCode);
-    let currentVideoIndex = 0;
-    let isLoopLocked = false;
+        const videos = videoIds.map(getEmbedCode);
+        let currentVideoIndex = 0;
+        let isLoopLocked = false;
 
-    const backgroundVideoContainer = document.getElementById('background-video');
-    const clockVideoContainer = document.getElementById('clock-video');
-    const container = document.querySelector('.container');
-    const clock = document.querySelector('.clock');
+        const backgroundVideoContainer = document.getElementById('background-video');
+        const clockVideoContainer = document.getElementById('clock-video');
+        const container = document.querySelector('.container');
+        const clock = document.querySelector('.clock');
 
-    function loadVideo(index) {
-      const videoEmbedCode = videos[index];
-      backgroundVideoContainer.innerHTML = videoEmbedCode;
-      clockVideoContainer.innerHTML = videoEmbedCode;
-    }
+        function loadVideo(index) {
+            const videoEmbedCode = videos[index];
+            backgroundVideoContainer.innerHTML = videoEmbedCode;
+            clockVideoContainer.innerHTML = videoEmbedCode;
+        }
 
-    loadVideo(currentVideoIndex);
+        loadVideo(currentVideoIndex);
 
-    function incrementVideoIndex() {
-      currentVideoIndex = (currentVideoIndex + 1) % videos.length;
-      loadVideo(currentVideoIndex);
-    }
+        function incrementVideoIndex() {
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+            loadVideo(currentVideoIndex);
+        }
 
-    function decrementVideoIndex() {
-      currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
-      loadVideo(currentVideoIndex);
-    }
+        function decrementVideoIndex() {
+            currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
+            loadVideo(currentVideoIndex);
+        }
 
-    setInterval(() => {
-      if (!isLoopLocked) {
-        incrementVideoIndex();
-      }
-    }, 60000);
+        setInterval(() => {
+            if (!isLoopLocked) {
+                incrementVideoIndex();
+            }
+        }, 60000);
 
-    // Clock hands and digital clock update
-    const hourHand = document.getElementById('hour-hand');
-    const minuteHand = document.getElementById('minute-hand');
-    const secondHand = document.getElementById('second-hand');
-    const digitalClock = document.getElementById('digital-clock');
+        // Clock hands and digital clock update
+        const hourHand = document.getElementById('hour-hand');
+        const minuteHand = document.getElementById('minute-hand');
+        const secondHand = document.getElementById('second-hand');
+        const digitalClock = document.getElementById('digital-clock');
 
-    function updateClock() {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
 
-      const secondRotation = (seconds * 6 + 270) % 360;
-      const minuteRotation = (minutes * 6 + seconds * 0.1 + 270) % 360;
-      const hourRotation = (((hours % 12) * 30 + minutes * 0.5) + 270) % 360;
+            const secondRotation = (seconds * 6 + 270) % 360;
+            const minuteRotation = (minutes * 6 + seconds * 0.1 + 270) % 360;
+            const hourRotation = (((hours % 12) * 30 + minutes * 0.5) + 270) % 360;
 
-      hourHand.style.transform = `rotate(${hourRotation}deg)`;
-      minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
-      secondHand.style.transform = `rotate(${secondRotation}deg)`;
+            hourHand.style.transform = `rotate(${hourRotation}deg)`;
+            minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
+            secondHand.style.transform = `rotate(${secondRotation}deg)`;
 
-      digitalClock.textContent = now.toLocaleTimeString();
-    }
+            digitalClock.textContent = now.toLocaleTimeString();
+        }
 
-    setInterval(updateClock, 1000);
-    updateClock();
+        setInterval(updateClock, 1000);
+        updateClock();
 
-    // Adjust clock size based on viewport dimensions.
-    function adjustClockSize() {
-      const minDimension = Math.min(window.innerWidth, window.innerHeight);
-      clock.style.width = `${minDimension * 0.9}px`;
-      clock.style.height = `${minDimension * 0.9}px`;
-    }
+        // Adjust clock size based on viewport dimensions.
+        function adjustClockSize() {
+            const minDimension = Math.min(window.innerWidth, window.innerHeight);
+            clock.style.width = `${minDimension * 0.9}px`;
+            clock.style.height = `${minDimension * 0.9}px`;
+        }
 
-    window.addEventListener('resize', adjustClockSize);
-    adjustClockSize();
+        window.addEventListener('resize', adjustClockSize);
+        adjustClockSize();
 
-    // Toggle the clock background (hiding the inner clock video) and unblurring the background.
-    const toggleBackgroundBtn = document.getElementById('toggleBackground');
-    toggleBackgroundBtn.addEventListener('click', () => {
-      clock.classList.toggle('no-background');
-      container.classList.toggle('unblur-background');
-    });
+        // Toggle the clock background (hiding the inner clock video) and unblurring the background.
+        const toggleBackgroundBtn = document.getElementById('toggleBackground');
+        toggleBackgroundBtn.addEventListener('click', () => {
+            clock.classList.toggle('no-background');
+            container.classList.toggle('unblur-background');
+        });
 
-    // Video controls
-    document.getElementById('prevButton').addEventListener('click', decrementVideoIndex);
-    document.getElementById('nextButton').addEventListener('click', incrementVideoIndex);
+        // Video controls
+        document.getElementById('prevButton').addEventListener('click', decrementVideoIndex);
+        document.getElementById('nextButton').addEventListener('click', incrementVideoIndex);
 
-    const toggleLoopBtn = document.getElementById('toggleLoop');
-    toggleLoopBtn.addEventListener('click', () => {
-      isLoopLocked = !isLoopLocked;
-      toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
-    });
+        const toggleLoopBtn = document.getElementById('toggleLoop');
+        toggleLoopBtn.addEventListener('click', () => {
+            isLoopLocked = !isLoopLocked;
+            toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
+        });
 
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowLeft') {
-        decrementVideoIndex();
-      } else if (event.key === 'ArrowRight') {
-        incrementVideoIndex();
-      }
-    });
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowLeft') {
+                decrementVideoIndex();
+            } else if (event.key === 'ArrowRight') {
+                incrementVideoIndex();
+            }
+        });
 
-    // Fullscreen toggle and automatic removal of the fullscreen class when exiting.
-    const fullScreenBtn = document.getElementById('fullScreenBtn');
-    fullScreenBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        document.body.classList.add('fullscreen');
-      } else {
-        document.exitFullscreen();
-      }
-    });
+        // Fullscreen toggle and automatic removal of the fullscreen class when exiting.
+        const fullScreenBtn = document.getElementById('fullScreenBtn');
+        fullScreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.body.classList.add('fullscreen');
+            } else {
+                document.exitFullscreen();
+            }
+        });
 
-    // Listen for fullscreen changes (including when exiting fullscreen on mobile)
-    document.addEventListener("fullscreenchange", () => {
-      if (!document.fullscreenElement) {
-        document.body.classList.remove('fullscreen');
-      }
-    });
+        // Listen for fullscreen changes (including when exiting fullscreen on mobile)
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement) {
+                document.body.classList.remove('fullscreen');
+            }
+        });
 
-    // External link button
-    const linkButton = document.getElementById('linkButton');
-    linkButton.addEventListener('click', () => {
-      window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
-    });
+        // External link button
+        const linkButton = document.getElementById('linkButton');
+        linkButton.addEventListener('click', () => {
+            window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
+        });
 
-    // Toggle the menu when the menu button is clicked
-    const menuButton = document.getElementById('menuButton');
-    const menu = document.getElementById('menu');
+        // Toggle the menu when the menu button is clicked
+        const menuButton = document.getElementById('menuButton');
+        const menu = document.getElementById('menu');
 
-    menuButton.addEventListener('click', () => {
-      menu.classList.toggle('expanded');
-    });
-  </script>
+        menuButton.addEventListener('click', () => {
+            menu.classList.toggle('expanded');
+        });
+    </script>
 </body>
 </html>
