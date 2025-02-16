@@ -30,12 +30,18 @@
       z-index: -1;
       filter: blur(5px);
       transition: filter 0.3s ease;
+      /* Added for better video rendering */
+      will-change: filter;
     }
     .background-video > div {
       position: absolute !important;
       top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%) !important;
+      /* Added for better scaling */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .container.unblur-background .background-video {
       filter: blur(0);
@@ -51,7 +57,8 @@
     .clock-video > div {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%;
+      /* Adjusted for better aspect ratio handling */
+      padding-bottom: 100%; /* Changed to square aspect ratio for clock */
     }
     .clock-video iframe {
       position: absolute;
@@ -131,6 +138,7 @@
       padding: 5px;
       border-radius: 3px;
       margin: 0 5px;
+      cursor: pointer;
     }
     .fullscreen .controls {
       display: none;
@@ -182,12 +190,33 @@
 
     const backgroundVideoContainer = document.getElementById('background-video');
     const clockVideoContainer = document.getElementById('clock-video');
-
-    loadVideo(currentVideoIndex);
+    const hourHand = document.getElementById('hour-hand');
+    const minuteHand = document.getElementById('minute-hand');
+    const secondHand = document.getElementById('second-hand');
+    const digitalClock = document.getElementById('digital-clock');
+    const clock = document.querySelector('.clock');
+    const toggleBackgroundBtn = document.getElementById('toggleBackground');
+    const container = document.querySelector('.container');
+    const toggleLoopBtn = document.getElementById('toggleLoop');
+    const fullScreenBtn = document.getElementById('fullScreenBtn');
+    const linkButton = document.getElementById('linkButton');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
 
     function loadVideo(index) {
       const videoUrl = videos[index];
-      const videoEmbedCode = `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="${videoUrl}?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`;
+      const videoEmbedCode = `
+        <div style="position:relative; width:100%; height:0px; padding-bottom:100%">
+          <iframe 
+            allow="fullscreen;autoplay" 
+            allowfullscreen 
+            height="100%" 
+            src="${videoUrl}?autoplay=1&muted=1&nocontrols=1" 
+            width="100%" 
+            style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"
+            loading="lazy"
+          ></iframe>
+        </div>`;
       backgroundVideoContainer.innerHTML = videoEmbedCode;
       clockVideoContainer.innerHTML = videoEmbedCode;
     }
@@ -202,22 +231,19 @@
       loadVideo(currentVideoIndex);
     }
 
+    // Video controls
+    prevButton.addEventListener('click', decrementVideoIndex);
+    nextButton.addEventListener('click', incrementVideoIndex);
+    toggleLoopBtn.addEventListener('click', () => {
+      isLoopLocked = !isLoopLocked;
+      toggleLoopBtn.textContent = isLoopLocked ? 'Unlock Video Loop' : 'Lock Video Loop';
+    });
+
     setInterval(() => {
       if (!isLoopLocked) {
         incrementVideoIndex();
       }
     }, 60000);
-
-    const hourHand = document.getElementById('hour-hand');
-    const minuteHand = document.getElementById('minute-hand');
-    const secondHand = document.getElementById('second-hand');
-    const digitalClock = document.getElementById('digital-clock');
-    const clock = document.querySelector('.clock');
-    const toggleBackgroundBtn = document.getElementById('toggleBackground');
-    const container = document.querySelector('.container');
-    const toggleLoopBtn = document.getElementById('toggleLoop');
-    const fullScreenBtn = document.getElementById('fullScreenBtn');
-    const linkButton = document.getElementById('linkButton');
 
     function updateClock() {
       const now = new Date();
@@ -274,6 +300,8 @@
     linkButton.addEventListener('click', () => {
       window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
     });
+
+    loadVideo(currentVideoIndex);
   </script>
 </body>
 </html>
