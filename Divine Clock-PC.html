@@ -1,311 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="frame-src https://streamable.com; child-src https://streamable.com;">
-    <title>Local Time Clock</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #000;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        .background-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            filter: blur(5px);
-            transition: filter 0.3s ease;
-        }
-        .background-video > div {
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-        }
-        .container.unblur-background .background-video {
-            filter: blur(0);
-        }
-        .clock-video {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: auto;
-            z-index: 1;
-        }
-        .clock-video > div {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-        }
-        .clock-video iframe {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .clock {
-            position: relative;
-            width: 90vmin;
-            height: 90vmin;
-            border: 10px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            overflow: hidden;
-            z-index: 2;
-        }
-        .clock.no-background .clock-video {
-            display: none;
-        }
-        .hand {
-            position: absolute;
-            width: 50%;
-            height: 0.2vmin;
-            background-color: rgba(255, 255, 255, 0.4);
-            top: 50%;
-            left: 50%;
-            transform-origin: 0% 50%;
-            transition: transform 0.05s ease-in-out;
-            z-index: 3;
-        }
-        .hour-hand {
-            height: 0.4vmin;
-            width: 35%;
-            background-color: rgba(255, 255, 255, 0.8);
-        }
-        .minute-hand {
-            height: 0.3vmin;
-            width: 45%;
-            background-color: rgba(255, 255, 255, 0.6);
-        }
-        .second-hand {
-            height: 0.15vmin;
-            width: 50%;
-            background-color: rgba(255, 0, 0, 0.8);
-        }
-        .digital-clock {
-            position: absolute;
-            top: 3vmin;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 2vmin;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 4;
-        }
-        .controls {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 4;
-            background-color: rgba(0, 0, 0, 0.2);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-        }
-        button {
-            background-color: transparent;
-            color: white;
-            border: 1px solid white;
-            padding: 5px;
-            border-radius: 3px;
-            margin: 0 5px;
-        }
-        .fullscreen .controls {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Time Clock</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .background-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      filter: blur(5px);
+      transition: filter 0.3s ease;
+    }
+    .background-video > div {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+    }
+    .container.unblur-background .background-video {
+      filter: blur(0);
+    }
+    .clock-video {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      z-index: 1;
+    }
+    .clock-video > div {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+    }
+    .clock-video iframe {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .clock {
+      position: relative;
+      width: 90vmin;
+      height: 90vmin;
+      border: 10px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      overflow: hidden;
+      z-index: 2;
+    }
+    .clock.no-background .clock-video {
+      display: none;
+    }
+    .hand {
+      position: absolute;
+      width: 50%;
+      height: 0.2vmin;
+      background-color: rgba(255, 255, 255, 0.4);
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 50%;
+      transition: transform 0.05s ease-in-out;
+      z-index: 3;
+    }
+    .hour-hand {
+      height: 0.4vmin;
+      width: 35%;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    .minute-hand {
+      height: 0.3vmin;
+      width: 45%;
+      background-color: rgba(255, 255, 255, 0.6);
+    }
+    .second-hand {
+      height: 0.15vmin;
+      width: 50%;
+      background-color: rgba(255, 0, 0, 0.8);
+    }
+    .digital-clock {
+      position: absolute;
+      top: 3vmin;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 2vmin;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 4;
+    }
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      background-color: rgba(0, 0, 0, 0.2);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+    }
+    button {
+      background-color: transparent;
+      color: white;
+      border: 1px solid white;
+      padding: 5px;
+      border-radius: 3px;
+      margin: 0 5px;
+    }
+    .fullscreen .controls {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div id="background-video" class="background-video"></div>
-        <div class="clock">
-            <div id="clock-video" class="clock-video"></div>
-            <div class="hand hour-hand" id="hour-hand"></div>
-            <div class="hand minute-hand" id="minute-hand"></div>
-            <div class="hand second-hand" id="second-hand"></div>
-        </div>
-        <div class="digital-clock" id="digital-clock"></div>
-        <div class="controls">
-            <button id="prevButton">Previous Video</button>
-            <button id="nextButton">Next Video</button>
-            <button id="toggleBackground">Toggle Clock Background</button>
-            <button id="toggleLoop">Lock/Unlock Video Loop</button>
-            <button id="fullScreenBtn">Full Screen</button>
-            <button id="linkButton">Visit My Redbubble Store</button>
-        </div>
+  <div class="container">
+    <div id="background-video" class="background-video"></div>
+    <div class="clock">
+      <div id="clock-video" class="clock-video"></div>
+      <div class="hand hour-hand" id="hour-hand"></div>
+      <div class="hand minute-hand" id="minute-hand"></div>
+      <div class="hand second-hand" id="second-hand"></div>
     </div>
+    <div class="digital-clock" id="digital-clock"></div>
+    <div class="controls">
+      <button id="prevButton">Previous Video</button>
+      <button id="nextButton">Next Video</button>
+      <button id="toggleBackground">Toggle Clock Background</button>
+      <button id="toggleLoop">Lock/Unlock Video Loop</button>
+      <button id="fullScreenBtn">Full Screen</button>
+      <!-- Replaced the slider with a button -->
+      <button id="linkButton">Visit My Redbubble Store</button>
+    </div>
+  </div>
 
-    <script>
-        const videos = [
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/68mgtj?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/xicpa4?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/av0uc1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/3r9wb4?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/f59xw6?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/43hser?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/z2eutk?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/fhoaq1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/8thoab?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/xa7jab?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/rf0v8f?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/n96sor?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/zzqtq1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/66xu50?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/qldvfo?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-            `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/lyc4ma?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe></div>`,
-        ];
+  <script>
+    const videos = [
+      `<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/68mgtj?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/xicpa4?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/av0uc1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/3r9wb4?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/f59xw6?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/43hser?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/z2eutk?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/fhoaq1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/8thoab?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/xa7jab?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/rf0v8f?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/n96sor?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/zzqtq1?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/66xu50?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/qldvfo?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+`<div style="position:relative; width:100%; height:0px; padding-bottom:100.000%"><iframe allow="fullscreen;autoplay" allowfullscreen height="100%" src="https://streamable.com/e/lyc4ma?autoplay=1&muted=1&nocontrols=1" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>`,
+    ];
 
-        let currentVideoIndex = 0;
-        let isLoopLocked = false;
+    let currentVideoIndex = 0;
+    let isLoopLocked = false;
 
-        const backgroundVideoContainer = document.getElementById('background-video');
-        const clockVideoContainer = document.getElementById('clock-video');
+    const backgroundVideoContainer = document.getElementById('background-video');
+    const clockVideoContainer = document.getElementById('clock-video');
 
-        async function checkVideoAvailability(url) {
-            try {
-                const response = await fetch(url, { method: 'HEAD', mode: 'cors' });
-                return response.ok;
-            } catch {
-                return false;
-            }
-        }
+    loadVideo(currentVideoIndex);
 
-        async function loadVideo(index) {
-            try {
-                const videoEmbedCode = videos[index];
-                const videoUrl = videoEmbedCode.match(/src="([^"]+)"/)[1];
-                
-                if (await checkVideoAvailability(videoUrl)) {
-                    backgroundVideoContainer.innerHTML = videoEmbedCode;
-                    clockVideoContainer.innerHTML = videoEmbedCode;
-                    
-                    const iframes = document.querySelectorAll('iframe');
-                    iframes.forEach(iframe => {
-                        iframe.onerror = () => {
-                            console.error('Error loading video:', iframe.src);
-                            incrementVideoIndex();
-                        };
-                        iframe.onload = () => {
-                            console.log('Video loaded successfully:', iframe.src);
-                        };
-                    });
-                } else {
-                    console.warn('Video unavailable:', videoUrl);
-                    incrementVideoIndex();
-                }
-            } catch (error) {
-                console.error('Error loading video:', error);
-                incrementVideoIndex();
-            }
-        }
+    function loadVideo(index) {
+      const videoEmbedCode = videos[index];
+      backgroundVideoContainer.innerHTML = videoEmbedCode;
+      clockVideoContainer.innerHTML = videoEmbedCode;
+    }
 
-        function incrementVideoIndex() {
-            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
-            loadVideo(currentVideoIndex);
-        }
+    function incrementVideoIndex() {
+      currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+      loadVideo(currentVideoIndex);
+    }
 
-        function decrementVideoIndex() {
-            currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
-            loadVideo(currentVideoIndex);
-        }
+    function decrementVideoIndex() {
+      currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
+      loadVideo(currentVideoIndex);
+    }
 
-        setInterval(() => {
-            if (!isLoopLocked) {
-                incrementVideoIndex();
-            }
-        }, 60000);
+    setInterval(() => {
+      if (!isLoopLocked) {
+        incrementVideoIndex();
+      }
+    }, 60000);
 
-        loadVideo(currentVideoIndex);
+    const hourHand = document.getElementById('hour-hand');
+    const minuteHand = document.getElementById('minute-hand');
+    const secondHand = document.getElementById('second-hand');
+    const digitalClock = document.getElementById('digital-clock');
+    const clock = document.querySelector('.clock');
+    const toggleBackgroundBtn = document.getElementById('toggleBackground');
+    const container = document.querySelector('.container');
+    const toggleLoopBtn = document.getElementById('toggleLoop');
+    const fullScreenBtn = document.getElementById('fullScreenBtn');
+    const linkButton = document.getElementById('linkButton');
 
-        const hourHand = document.getElementById('hour-hand');
-        const minuteHand = document.getElementById('minute-hand');
-        const secondHand = document.getElementById('second-hand');
-        const digitalClock = document.getElementById('digital-clock');
-        const clock = document.querySelector('.clock');
-        const toggleBackgroundBtn = document.getElementById('toggleBackground');
-        const container = document.querySelector('.container');
-        const toggleLoopBtn = document.getElementById('toggleLoop');
-        const fullScreenBtn = document.getElementById('fullScreenBtn');
-        const linkButton = document.getElementById('linkButton');
+    function updateClock() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
 
-        function updateClock() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
+      const secondRotation = (seconds * 6 + 270) % 360;
+      const minuteRotation = (minutes * 6 + (seconds * 0.1)) + 270;
+      const hourRotation = ((hours % 12) * 30 + (minutes * 0.5) + 270) % 360;
 
-            const secondRotation = (seconds * 6 + 270) % 360;
-            const minuteRotation = (minutes * 6 + (seconds * 0.1)) + 270;
-            const hourRotation = ((hours % 12) * 30 + (minutes * 0.5) + 270) % 360;
+      hourHand.style.transform = `rotate(${hourRotation}deg)`;
+      minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
+      secondHand.style.transform = `rotate(${secondRotation}deg)`;
 
-            hourHand.style.transform = `rotate(${hourRotation}deg)`;
-            minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
-            secondHand.style.transform = `rotate(${secondRotation}deg)`;
+      digitalClock.textContent = now.toLocaleTimeString();
+    }
 
-            digitalClock.textContent = now.toLocaleTimeString();
-        }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-        setInterval(updateClock, 1000);
-        updateClock();
+    function adjustClockSize() {
+      const minDimension = Math.min(window.innerWidth, window.innerHeight);
+      clock.style.width = `${minDimension * 0.9}px`;
+      clock.style.height = `${minDimension * 0.9}px`;
+    }
 
-        function adjustClockSize() {
-            const minDimension = Math.min(window.innerWidth, window.innerHeight);
-            clock.style.width = `${minDimension * 0.9}px`;
-            clock.style.height = `${minDimension * 0.9}px`;
-        }
+    window.addEventListener('resize', adjustClockSize);
+    adjustClockSize();
 
-        window.addEventListener('resize', adjustClockSize);
-        adjustClockSize();
+    toggleBackgroundBtn.addEventListener('click', () => {
+      clock.classList.toggle('no-background');
+      container.classList.toggle('unblur-background');
+    });
 
-        toggleBackgroundBtn.addEventListener('click', () => {
-            clock.classList.toggle('no-background');
-            container.classList.toggle('unblur-background');
-        });
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        decrementVideoIndex();
+      } else if (event.key === 'ArrowRight') {
+        incrementVideoIndex();
+      }
+    });
 
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowLeft') {
-                decrementVideoIndex();
-            } else if (event.key === 'ArrowRight') {
-                incrementVideoIndex();
-            }
-        });
+    fullScreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        document.body.classList.add('fullscreen');
+      } else {
+        document.exitFullscreen();
+        document.body.classList.remove('fullscreen');
+      }
+    });
 
-        fullScreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-                document.body.classList.add('fullscreen');
-            } else {
-                document.exitFullscreen();
-                document.body.classList.remove('fullscreen');
-            }
-        });
-
-        linkButton.addEventListener('click', () => {
-            window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
-        });
-    </script>
+    linkButton.addEventListener('click', () => {
+      window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
+    });
+  </script>
 </body>
 </html>
