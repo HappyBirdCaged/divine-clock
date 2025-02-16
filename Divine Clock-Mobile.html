@@ -49,10 +49,10 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 100vh;
-      height: 100vh;
-      min-width: 100vw;
-      min-height: 100vh;
+      width: 100vh; /* Use viewport height to maintain square aspect ratio */
+      height: 100vh; /* Force the height to match the viewport height */
+      min-width: 100vw; /* Ensure it covers the width */
+      min-height: 100vh; /* Ensure it covers the height */
     }
 
     /* Ensure the iframe inside the video wrapper stretches to fill the wrapper */
@@ -104,7 +104,7 @@
       height: 90vmin;
       border: 10px solid rgba(255, 255, 255, 0.2);
       border-radius: 50%;
-      overflow: visible;
+      overflow: hidden;
       z-index: 2;
       will-change: transform, width, height;
     }
@@ -158,17 +158,13 @@
       z-index: 4;
     }
 
-    /* Controls container */
-    .controls {
+    /* Menu container fixed at the 6 o’clock position on the clock rim */
+    .menu-container {
       position: absolute;
-      bottom: 20px;
       left: 50%;
-      transform: translateX(-50%);
-      z-index: 4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
+      top: 100%;
+      transform: translate(-50%, -50%);
+      z-index: 6;
     }
 
     /* Menu button styles */
@@ -192,14 +188,14 @@
     /* Menu styles */
     .menu {
       position: absolute;
-      bottom: 60px;
+      bottom: 100%; /* Display above the button */
       left: 50%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.5);
       color: white;
       padding: 10px;
       border-radius: 5px;
-      display: none;
+      display: none; /* Hidden by default */
       flex-direction: column;
       align-items: center;
       gap: 5px;
@@ -224,53 +220,9 @@
       text-align: center;
     }
 
-    /* Hide controls in fullscreen */
-    .fullscreen .controls {
+    /* (Optional) Hide the menu container in fullscreen mode */
+    .fullscreen .menu-container {
       display: none;
-    }
-
-    /* New styles for bottom button and arrow */
-    .clock-button-wrapper {
-      position: absolute;
-      bottom: -40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 4;
-    }
-
-    .arrow-down {
-      width: 0;
-      height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-bottom: 10px solid rgba(255, 255, 255, 0.6);
-      margin-bottom: -10px;
-      z-index: 5;
-    }
-
-    .bottom-button {
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      border: 1px solid white;
-      padding: 10px;
-      border-radius: 50%;
-      cursor: pointer;
-      touch-action: manipulation;
-      font-size: 16px;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    }
-
-    /* Ensure button stays visible in fullscreen */
-    .fullscreen .clock-button-wrapper {
-      display: flex !important;
     }
   </style>
 </head>
@@ -282,23 +234,20 @@
       <div class="hand hour-hand" id="hour-hand"></div>
       <div class="hand minute-hand" id="minute-hand"></div>
       <div class="hand second-hand" id="second-hand"></div>
-      <div class="clock-button-wrapper">
-        <div class="arrow-down"></div>
-        <button id="bottomButton" class="bottom-button">↓</button>
+      <!-- Menu button fixed at 6 o’clock on the clock rim -->
+      <div class="menu-container">
+        <button id="menuButton" class="menu-button">☰</button>
+        <div id="menu" class="menu">
+          <button id="prevButton">Previous Video</button>
+          <button id="nextButton">Next Video</button>
+          <button id="toggleBackground">Toggle Clock Background</button>
+          <button id="toggleLoop">Lock Video Loop</button>
+          <button id="fullScreenBtn">Full Screen</button>
+          <button id="linkButton">Visit My Redbubble Store</button>
+        </div>
       </div>
     </div>
     <div class="digital-clock" id="digital-clock"></div>
-    <div class="controls">
-      <button id="menuButton" class="menu-button">☰</button>
-      <div id="menu" class="menu">
-        <button id="prevButton">Previous Video</button>
-        <button id="nextButton">Next Video</button>
-        <button id="toggleBackground">Toggle Clock Background</button>
-        <button id="toggleLoop">Lock Video Loop</button>
-        <button id="fullScreenBtn">Full Screen</button>
-        <button id="linkButton">Visit My Redbubble Store</button>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -445,13 +394,6 @@
 
     menuButton.addEventListener('click', () => {
       menu.classList.toggle('expanded');
-    });
-
-    // Bottom button functionality
-    const bottomButton = document.getElementById('bottomButton');
-    bottomButton.addEventListener('click', () => {
-      console.log('Bottom button clicked!');
-      // Add your desired functionality here
     });
   </script>
 </body>
