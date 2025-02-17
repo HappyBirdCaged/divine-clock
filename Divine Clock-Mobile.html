@@ -49,10 +49,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100vh;
-            height: 100vh;
-            min-width: 100vw;
-            min-height: 100vh;
+            width: 100vh; /* Use viewport height to maintain square aspect ratio */
+            height: 100vh; /* Force the height to match the viewport height */
+            min-width: 100vw; /* Ensure it covers the width */
+            min-height: 100vh; /* Ensure it covers the height */
         }
 
         /* Ensure the iframe inside the video wrapper stretches to fill the wrapper */
@@ -158,50 +158,52 @@
             z-index: 4;
         }
 
-        /* Remove the controls container positioning since we're positioning the button absolutely */
         .controls {
-            position: relative;
-            z-index: 4;
-        }
-
-        /* Position menu button at 6 o'clock on the clock rim */
-        .menu-button {
             position: absolute;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: 1px solid white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            touch-action: manipulation;
-            font-size: 16px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-            z-index: 4;
-            bottom: calc(-45vmin - 20px); /* Position just outside clock border (clock radius + offset) */
+            bottom: 0; /* Align to the bottom */
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%); /* Center horizontally */
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding-bottom: 20px; /* Add some padding at the bottom */
         }
 
-        /* Menu positioning */
+        .menu-button {
+   	background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: manipulation;
+    font-size: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    margin-bottom: calc(90vmin/2 + 10px - 10px);
+
+        }
+
         .menu {
             position: absolute;
+            bottom: calc(90vmin/2 + 60px + 20px); /* Position below the adjusted menu button */
+            left: 50%;
+            transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 10px;
             border-radius: 5px;
-            display: none;
+            display: none; /* Initially hidden */
             flex-direction: column;
             align-items: center;
             gap: 5px;
             z-index: 5;
-            bottom: calc(-45vmin + 30px); /* Position above button */
-            left: 50%;
-            transform: translateX(-50%);
         }
 
         .menu.expanded {
@@ -223,28 +225,6 @@
         .fullscreen .controls {
             display: none;
         }
-
-        /* Portrait mode adjustments */
-        @media screen and (orientation: portrait) {
-            .menu-button {
-                bottom: calc(-45vmin - 20px); /* Clock radius (90vmin/2) + offset */
-            }
-
-            .menu {
-                bottom: calc(-45vmin + 30px);
-            }
-        }
-
-        /* Landscape mode adjustments */
-        @media screen and (orientation: landscape) {
-            .menu-button {
-                bottom: calc(-45vmin - 20px); /* Clock radius (90vmin/2) + offset */
-            }
-
-            .menu {
-                bottom: calc(-45vmin + 30px);
-            }
-        }
     </style>
 </head>
 <body>
@@ -258,7 +238,7 @@
         </div>
         <div class="digital-clock" id="digital-clock"></div>
         <div class="controls"> 
-            <button id="menuButton" class="menu-button">☰</button>
+    <button id="menuButton" class="menu-button">☰</button>
             <div id="menu" class="menu">
                 <button id="prevButton">Back</button>
                 <button id="nextButton">Next</button>
@@ -349,7 +329,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Adjust clock size based on viewport dimensions
+        // Adjust clock size based on viewport dimensions.
         function adjustClockSize() {
             const minDimension = Math.min(window.innerWidth, window.innerHeight);
             clock.style.width = `${minDimension * 0.9}px`;
@@ -359,7 +339,7 @@
         window.addEventListener('resize', adjustClockSize);
         adjustClockSize();
 
-        // Toggle the clock background and unblurring the background
+        // Toggle the clock background (hiding the inner clock video) and unblurring the background.
         const toggleBackgroundBtn = document.getElementById('toggleBackground');
         toggleBackgroundBtn.addEventListener('click', () => {
             clock.classList.toggle('no-background');
@@ -384,7 +364,7 @@
             }
         });
 
-        // Fullscreen toggle
+        // Fullscreen toggle and automatic removal of the fullscreen class when exiting.
         const fullScreenBtn = document.getElementById('fullScreenBtn');
         fullScreenBtn.addEventListener('click', () => {
             if (!document.fullscreenElement) {
@@ -395,6 +375,7 @@
             }
         });
 
+        // Listen for fullscreen changes (including when exiting fullscreen on mobile)
         document.addEventListener("fullscreenchange", () => {
             if (!document.fullscreenElement) {
                 document.body.classList.remove('fullscreen');
@@ -407,7 +388,7 @@
             window.open('https://www.redbubble.com/people/HappyBirdCaged/shop?asc=u', '_blank');
         });
 
-        // Toggle the menu
+        // Toggle the menu when the menu button is clicked
         const menuButton = document.getElementById('menuButton');
         const menu = document.getElementById('menu');
 
