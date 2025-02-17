@@ -158,6 +158,12 @@
             z-index: 4;
         }
 
+        /* Remove the controls container positioning since we're positioning the button absolutely */
+        .controls {
+            position: relative;
+            z-index: 4;
+        }
+
         /* Position menu button at 6 o'clock on the clock rim */
         .menu-button {
             position: absolute;
@@ -176,12 +182,9 @@
             justify-content: center;
             box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
             z-index: 4;
-        }
-
-        /* Remove the controls container positioning since we're positioning the button absolutely */
-        .controls {
-            position: relative;
-            z-index: 4;
+            bottom: calc(-45vmin - 30px); /* Position below clock center */
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         /* Menu positioning */
@@ -196,6 +199,9 @@
             align-items: center;
             gap: 5px;
             z-index: 5;
+            bottom: calc(-45vmin + 20px); /* Position above button */
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .menu.expanded {
@@ -218,33 +224,25 @@
             display: none;
         }
 
-        /* Portrait mode positioning */
+        /* Portrait mode adjustments */
         @media screen and (orientation: portrait) {
             .menu-button {
-                bottom: calc(5vmin - 20px);
-                left: 50%;
-                transform: translateX(-50%);
+                bottom: calc(-45vmin - 30px);
             }
 
             .menu {
-                bottom: calc(5vmin + 30px);
-                left: 50%;
-                transform: translateX(-50%);
+                bottom: calc(-45vmin + 20px);
             }
         }
 
-        /* Landscape mode positioning */
+        /* Landscape mode adjustments */
         @media screen and (orientation: landscape) {
             .menu-button {
-                bottom: calc(5vmin - 20px);
-                left: 50%;
-                transform: translateX(-50%);
+                bottom: calc(-45vmin - 30px);
             }
 
             .menu {
-                bottom: calc(5vmin + 30px);
-                left: 50%;
-                transform: translateX(-50%);
+                bottom: calc(-45vmin + 20px);
             }
         }
     </style>
@@ -351,44 +349,15 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Adjust clock size and position menu button
-        function positionMenuButton() {
-            const clock = document.querySelector('.clock');
-            const menuButton = document.querySelector('.menu-button');
-            const clockRect = clock.getBoundingClientRect();
-            
-            // Calculate the position for 6 o'clock
-            const clockCenterX = clockRect.left + clockRect.width / 2;
-            const clockCenterY = clockRect.top + clockRect.height / 2;
-            const radius = clockRect.width / 2;
-            
-            // Position at 6 o'clock (270 degrees)
-            const angle = 270 * (Math.PI / 180);
-            const buttonX = clockCenterX + radius * Math.cos(angle) - 20;
-            const buttonY = clockCenterY + radius * Math.sin(angle) - 20;
-            
-            // Convert to viewport coordinates
-            const buttonXPercent = (buttonX / window.innerWidth) * 100;
-            const buttonYPercent = (buttonY / window.innerHeight) * 100;
-            
-            menuButton.style.left = `${buttonXPercent}vw`;
-            menuButton.style.bottom = `${100 - buttonYPercent}vh`;
-        }
-
+        // Adjust clock size based on viewport dimensions
         function adjustClockSize() {
             const minDimension = Math.min(window.innerWidth, window.innerHeight);
             clock.style.width = `${minDimension * 0.9}px`;
             clock.style.height = `${minDimension * 0.9}px`;
-            positionMenuButton();
         }
 
-        window.addEventListener('resize', () => {
-            adjustClockSize();
-            positionMenuButton();
-        });
-
+        window.addEventListener('resize', adjustClockSize);
         adjustClockSize();
-        positionMenuButton();
 
         // Toggle the clock background and unblurring the background
         const toggleBackgroundBtn = document.getElementById('toggleBackground');
