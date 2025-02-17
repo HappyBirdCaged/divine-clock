@@ -182,7 +182,7 @@
             justify-content: center;
             box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
             z-index: 4;
-            bottom: calc(-45vmin - 30px); /* Position below clock center */
+            bottom: calc(-45vmin - 20px); /* Position just outside clock border (clock radius + offset) */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -199,7 +199,7 @@
             align-items: center;
             gap: 5px;
             z-index: 5;
-            bottom: calc(-45vmin + 20px); /* Position above button */
+            bottom: calc(-45vmin + 30px); /* Position above button */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -227,22 +227,22 @@
         /* Portrait mode adjustments */
         @media screen and (orientation: portrait) {
             .menu-button {
-                bottom: calc(-45vmin - 30px);
+                bottom: calc(-45vmin - 20px); /* Clock radius (90vmin/2) + offset */
             }
 
             .menu {
-                bottom: calc(-45vmin + 20px);
+                bottom: calc(-45vmin + 30px);
             }
         }
 
         /* Landscape mode adjustments */
         @media screen and (orientation: landscape) {
             .menu-button {
-                bottom: calc(-45vmin - 30px);
+                bottom: calc(-45vmin - 20px); /* Clock radius (90vmin/2) + offset */
             }
 
             .menu {
-                bottom: calc(-45vmin + 20px);
+                bottom: calc(-45vmin + 30px);
             }
         }
     </style>
