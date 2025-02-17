@@ -49,10 +49,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100vh; /* Use viewport height to maintain square aspect ratio */
-            height: 100vh; /* Force the height to match the viewport height */
-            min-width: 100vw; /* Ensure it covers the width */
-            min-height: 100vh; /* Ensure it covers the height */
+            width: 100vh;
+            height: 100vh;
+            min-width: 100vw;
+            min-height: 100vh;
         }
 
         /* Ensure the iframe inside the video wrapper stretches to fill the wrapper */
@@ -160,50 +160,69 @@
 
         .controls {
             position: absolute;
-            bottom: 0; /* Align to the bottom */
+            bottom: 0;
             left: 50%;
-            transform: translateX(-50%); /* Center horizontally */
+            transform: translateX(-50%);
             z-index: 4;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 5px;
-            padding-bottom: 20px; /* Add some padding at the bottom */
+            padding-bottom: 20px;
         }
 
         .menu-button {
-   	background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: 1px solid white;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
-    touch-action: manipulation;
-    font-size: 16px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    margin-bottom: calc(90vmin/2 + 10px - 10px);
-
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 1px solid white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            touch-action: manipulation;
+            font-size: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            margin-bottom: calc(90vmin/2 + 10px - 10px);
         }
 
         .menu {
             position: absolute;
-            bottom: calc(90vmin/2 + 60px + 20px); /* Position below the adjusted menu button */
-            left: 50%;
-            transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 10px;
             border-radius: 5px;
-            display: none; /* Initially hidden */
+            display: none;
             flex-direction: column;
             align-items: center;
             gap: 5px;
             z-index: 5;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: calc(90vmin/2 + 60px + 20px);
+        }
+
+        @media screen and (orientation: portrait) {
+            .menu-button {
+                margin-bottom: calc(90vmin/2 + 10px - 10px);
+            }
+            
+            .menu {
+                bottom: calc(90vmin/2 + 60px + 20px);
+            }
+        }
+
+        @media screen and (orientation: landscape) {
+            .menu-button {
+                margin-bottom: calc(90vmin/2 + 10px - 10px);
+            }
+            
+            .menu {
+                bottom: calc(90vmin/2 + 60px + 20px);
+            }
         }
 
         .menu.expanded {
@@ -238,7 +257,7 @@
         </div>
         <div class="digital-clock" id="digital-clock"></div>
         <div class="controls"> 
-    <button id="menuButton" class="menu-button">☰</button>
+            <button id="menuButton" class="menu-button">☰</button>
             <div id="menu" class="menu">
                 <button id="prevButton">Back</button>
                 <button id="nextButton">Next</button>
