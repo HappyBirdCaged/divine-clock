@@ -171,26 +171,25 @@
         }
 
         .menu-button {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: 1px solid white;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
-    touch-action: manipulation;
-    font-size: 16px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    position: absolute;
-    left: 50%;
-    bottom: 0; /* Position at the bottom of the container */
-    transform: translate(-50%, 50%); /* Move up by half the button's height */
-    pointer-events: auto;
-}
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 1px solid white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            touch-action: manipulation;
+            font-size: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translate(-50%, 30px); /* Offset from clock edge */
+            pointer-events: auto;
         }
 
         .menu {
@@ -206,8 +205,30 @@
             z-index: 5;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 50vh; /* Position menu above the button */
+            bottom: 50px; /* Position above button */
             pointer-events: auto;
+        }
+
+        @media screen and (orientation: portrait) {
+            .menu-button {
+                bottom: 0;
+                transform: translate(-50%, 30px);
+            }
+            
+            .menu {
+                bottom: 50px;
+            }
+        }
+
+        @media screen and (orientation: landscape) {
+            .menu-button {
+                bottom: 0;
+                transform: translate(-50%, 30px);
+            }
+            
+            .menu {
+                bottom: 50px;
+            }
         }
 
         .menu.expanded {
@@ -337,15 +358,10 @@
         // Adjust clock size based on viewport dimensions.
         function adjustClockSize() {
             const minDimension = Math.min(window.innerWidth, window.innerHeight);
-            const clockSize = minDimension * 0.9;
-
-            clock.style.width = `${clockSize}px`;
-            clock.style.height = `${clockSize}px`;
-            document.querySelector('.controls').style.width = `${clockSize}px`;
-            document.querySelector('.controls').style.height = `${clockSize}px`;
-
-            const menuButton = document.getElementById('menuButton');
-            menuButton.style.bottom = `${(window.innerHeight - clockSize) / 2}px`;
+            clock.style.width = `${minDimension * 0.9}px`;
+            clock.style.height = `${minDimension * 0.9}px`;
+            document.querySelector('.controls').style.width = `${minDimension * 0.9}px`;
+            document.querySelector('.controls').style.height = `${minDimension * 0.9}px`;
         }
 
         window.addEventListener('resize', adjustClockSize);
