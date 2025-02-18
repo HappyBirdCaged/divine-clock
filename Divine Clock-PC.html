@@ -187,7 +187,7 @@
             box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
             position: absolute;
             left: 50%;
-            bottom: 5vh; /* Changed to use vh for consistent vertical positioning */
+            bottom: 45vh; /* Adjusted to align with clock rim */
             transform: translate(-50%, 0);
             pointer-events: auto;
         }
@@ -205,7 +205,7 @@
             z-index: 5;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 7vh; /* Adjusted for menu positioning */
+            bottom: 50vh; /* Position menu above the button */
             pointer-events: auto;
         }
 
@@ -255,6 +255,7 @@
     </div>
 
     <script>
+        // Return embed code for a given video ID.
         function getEmbedCode(id) {
             return `<div class="video-wrapper">
                         <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
@@ -335,10 +336,15 @@
         // Adjust clock size based on viewport dimensions.
         function adjustClockSize() {
             const minDimension = Math.min(window.innerWidth, window.innerHeight);
-            clock.style.width = `${minDimension * 0.9}px`;
-            clock.style.height = `${minDimension * 0.9}px`;
-            document.querySelector('.controls').style.width = `${minDimension * 0.9}px`;
-            document.querySelector('.controls').style.height = `${minDimension * 0.9}px`;
+            const clockSize = minDimension * 0.9;
+
+            clock.style.width = `${clockSize}px`;
+            clock.style.height = `${clockSize}px`;
+            document.querySelector('.controls').style.width = `${clockSize}px`;
+            document.querySelector('.controls').style.height = `${clockSize}px`;
+
+            const menuButton = document.getElementById('menuButton');
+            menuButton.style.bottom = `${(window.innerHeight - clockSize) / 2}px`;
         }
 
         window.addEventListener('resize', adjustClockSize);
@@ -400,15 +406,6 @@
         menuButton.addEventListener('click', () => {
             menu.classList.toggle('expanded');
         });
-
-        // Adjust menu button position on resize for consistency
-        function positionMenuButton() {
-            const vh = window.innerHeight * 0.01;
-            menuButton.style.bottom = `${vh * 5}px`; // 5% from bottom
-        }
-
-        window.addEventListener('resize', positionMenuButton);
-        positionMenuButton(); // Call once on page load
     </script>
 </body>
 </html>
