@@ -171,25 +171,26 @@
         }
 
         .menu-button {
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: 1px solid white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            touch-action: manipulation;
-            font-size: 16px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-            position: absolute;
-            left: 50%;
-            bottom: 45vh; /* Adjusted to align with clock rim */
-            transform: translate(-50%, 0);
-            pointer-events: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: manipulation;
+    font-size: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 50%;
+    bottom: 0; /* Position at the bottom of the container */
+    transform: translate(-50%, 50%); /* Move up by half the button's height */
+    pointer-events: auto;
+}
         }
 
         .menu {
