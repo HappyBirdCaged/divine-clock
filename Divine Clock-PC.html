@@ -187,8 +187,8 @@
             box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
             position: absolute;
             left: 50%;
-            bottom: 0;
-            transform: translate(-50%, 30px); /* Offset from clock edge */
+            bottom: 5vh; /* Changed to use vh for consistent vertical positioning */
+            transform: translate(-50%, 0);
             pointer-events: auto;
         }
 
@@ -205,30 +205,8 @@
             z-index: 5;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 50px; /* Position above button */
+            bottom: 7vh; /* Adjusted for menu positioning */
             pointer-events: auto;
-        }
-
-        @media screen and (orientation: portrait) {
-            .menu-button {
-                bottom: 0;
-                transform: translate(-50%, 30px);
-            }
-            
-            .menu {
-                bottom: 50px;
-            }
-        }
-
-        @media screen and (orientation: landscape) {
-            .menu-button {
-                bottom: 0;
-                transform: translate(-50%, 30px);
-            }
-            
-            .menu {
-                bottom: 50px;
-            }
         }
 
         .menu.expanded {
@@ -277,7 +255,6 @@
     </div>
 
     <script>
-        // Return embed code for a given video ID.
         function getEmbedCode(id) {
             return `<div class="video-wrapper">
                         <iframe src="https://streamable.com/e/${id}?autoplay=1&muted=1&nocontrols=1" 
@@ -423,6 +400,15 @@
         menuButton.addEventListener('click', () => {
             menu.classList.toggle('expanded');
         });
+
+        // Adjust menu button position on resize for consistency
+        function positionMenuButton() {
+            const vh = window.innerHeight * 0.01;
+            menuButton.style.bottom = `${vh * 5}px`; // 5% from bottom
+        }
+
+        window.addEventListener('resize', positionMenuButton);
+        positionMenuButton(); // Call once on page load
     </script>
 </body>
 </html>
